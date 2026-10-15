@@ -47,6 +47,9 @@ export function EntrarPage() {
           Entrar
         </Boton>
       </form>
+      <Link to="/recuperar" className="mt-4 block text-center font-medium text-tinta-suave">
+        Me olvidé la contraseña
+      </Link>
       <p className="mt-6 text-center text-tinta-suave">
         ¿Primera vez?{' '}
         <Link to="/registro" className="font-semibold text-cancha">

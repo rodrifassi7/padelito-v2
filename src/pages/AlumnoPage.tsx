@@ -231,13 +231,13 @@ export function AlumnoPage() {
       )}
 
       {tab === 'pagos' && (
-        <Seccion titulo="Pagos">
+        <div className="mt-5">
           <PagosAlumno alumno={a} />
-        </Seccion>
+        </div>
       )}
 
       {tab === 'ficha' && (
-        <Seccion titulo="Ficha">
+        <div className="mt-5">
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-linea bg-linea">
             {datos.map(([k, v]) => (
               <div key={k} className="bg-white px-4 py-3">
@@ -251,7 +251,7 @@ export function AlumnoPage() {
           <Boton variante="secundario" ancho className="mt-4" onClick={() => setEditar(true)}>
             <Pencil className="size-4" aria-hidden /> Editar ficha
           </Boton>
-        </Seccion>
+        </div>
       )}
 
       <AlumnoHoja abierta={editar} onCerrar={() => setEditar(false)} alumno={a} />
