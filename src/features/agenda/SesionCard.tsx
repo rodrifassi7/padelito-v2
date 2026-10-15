@@ -8,8 +8,8 @@ import type { Asistencia, EstadoAsistencia, Sesion } from '../../lib/tipos'
 import { NotaHoja } from '../seguimiento/NotaHoja'
 
 const ESTILO_ACTIVO: Record<Exclude<EstadoAsistencia, 'pendiente'>, string> = {
-  presente: 'bg-pelota text-tinta border-pelota-oscura',
-  ausente: 'bg-falta text-white border-falta',
+  presente: 'bg-pelota text-noche border-pelota-oscura',
+  ausente: 'bg-falta-fondo text-sobre-falta border-falta-fondo',
   aviso: 'bg-aviso-clara text-aviso border-aviso/50',
 }
 
@@ -33,7 +33,7 @@ function ControlAsistencia({ sesion, asistencia }: { sesion: Sesion; asistencia:
             }
             className={clsx(
               'h-9 min-w-14 rounded-lg border px-2.5 text-sm font-semibold transition-colors',
-              activo ? ESTILO_ACTIVO[op] : 'border-linea bg-white text-tinta-suave hover:border-tinta-suave',
+              activo ? ESTILO_ACTIVO[op] : 'border-linea bg-superficie text-tinta-suave hover:border-tinta-suave',
             )}
           >
             {ASISTENCIA[op]}
@@ -56,7 +56,7 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
   const puedeAnotar = !cancelada && empezo && paraNotas.length > 0
 
   return (
-    <article className={clsx('rounded-2xl border border-linea bg-white', cancelada && 'opacity-60')}>
+    <article className={clsx('rounded-2xl vidrio border border-linea bg-superficie', cancelada && 'opacity-60')}>
       <button
         type="button"
         onClick={onAbrir}
@@ -64,7 +64,7 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
         aria-label={`Clase de las ${hora(sesion.hora)}, ver detalle`}
       >
         <div className="min-w-[4.25rem] shrink-0">
-          <p className={clsx('font-display text-3xl leading-none font-semibold tabular', cancelada && 'line-through')}>
+          <p className={clsx('font-display text-[23px] leading-none font-bold tabular tracking-tight', cancelada && 'line-through')}>
             {hora(sesion.hora)}
           </p>
           <p className="mt-1 text-sm text-tinta-suave tabular">a {horaFin(sesion.hora, sesion.duracion_min)}</p>
@@ -112,7 +112,7 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
           <button
             type="button"
             onClick={() => setNotas(true)}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-b-2xl border-t border-linea text-[15px] font-semibold text-cancha hover:bg-cancha-clara/50"
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-b-2xl border-t border-linea text-[15px] font-semibold text-acento hover:bg-acento-suave/50"
           >
             <NotebookPen className="size-4" aria-hidden /> Notas de la clase
           </button>

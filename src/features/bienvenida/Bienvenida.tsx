@@ -37,10 +37,10 @@ export function Bienvenida() {
   if (hechos === pasos.length) return null
 
   return (
-    <section className="mb-4 rounded-2xl border border-linea bg-white p-4" aria-labelledby="primeros-pasos">
+    <section className="mb-4 rounded-2xl vidrio border border-linea bg-superficie p-4" aria-labelledby="primeros-pasos">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h2 id="primeros-pasos" className="font-display text-2xl font-semibold">Primeros pasos</h2>
+          <h2 id="primeros-pasos" className="font-display text-xl font-bold tracking-tight">Primeros pasos</h2>
           <p className="text-sm text-tinta-suave">
             {hechos} de {pasos.length} listos
           </p>
@@ -57,7 +57,7 @@ export function Bienvenida() {
         </button>
       </div>
       <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-linea" aria-hidden>
-        <div className="h-full rounded-full bg-cancha transition-all" style={{ width: `${(hechos / pasos.length) * 100}%` }} />
+        <div className="h-full rounded-full bg-primario transition-all" style={{ width: `${(hechos / pasos.length) * 100}%` }} />
       </div>
       <ol>
         {pasos.map((p) => (
@@ -66,7 +66,7 @@ export function Bienvenida() {
               <span
                 className={clsx(
                   'grid size-7 shrink-0 place-items-center rounded-full border-2',
-                  p.hecho ? 'border-pelota bg-pelota text-tinta' : 'border-linea',
+                  p.hecho ? 'border-pelota bg-pelota text-noche' : 'border-linea',
                 )}
               >
                 {p.hecho && <Check className="size-4" strokeWidth={3} aria-label="Listo" />}

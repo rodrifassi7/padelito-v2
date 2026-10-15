@@ -60,7 +60,7 @@ export function ElegirAlumnos({ elegidos, onChange, excluir = [], uno }: Props) 
         <span className="sr-only">Buscar o agregar alumno</span>
         <Search className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
         <input
-          className="w-full rounded-xl border border-linea bg-white py-3 pr-3.5 pl-11 focus:border-cancha focus:ring-2 focus:ring-cancha/20 focus:outline-none"
+          className="w-full rounded-xl vidrio border border-linea bg-superficie py-3 pr-3.5 pl-11 focus:border-primario focus:ring-2 focus:ring-primario/30 focus:outline-none"
           placeholder="Buscar o escribir un nombre nuevo"
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
@@ -72,13 +72,13 @@ export function ElegirAlumnos({ elegidos, onChange, excluir = [], uno }: Props) 
           type="button"
           onClick={crearRapido}
           disabled={crear.isPending}
-          className="flex items-center gap-3 rounded-xl border border-dashed border-cancha/50 px-3.5 py-3 text-left font-medium text-cancha"
+          className="flex items-center gap-3 rounded-xl border border-dashed border-primario/50 px-3.5 py-3 text-left font-medium text-acento"
         >
           <Plus className="size-5" aria-hidden /> Agregar a {busqueda.trim()} como alumno nuevo
         </button>
       )}
 
-      <ul className="flex flex-col overflow-hidden rounded-xl border border-linea bg-white">
+      <ul className="flex flex-col overflow-hidden rounded-xl vidrio border border-linea bg-superficie">
         {lista.length === 0 && !busqueda && (
           <li className="px-4 py-4 text-tinta-suave">Todavía no hay alumnos. Escribí un nombre para agregarlo.</li>
         )}
@@ -90,7 +90,7 @@ export function ElegirAlumnos({ elegidos, onChange, excluir = [], uno }: Props) 
                 type="button"
                 onClick={() => alternar(a.id)}
                 aria-pressed={elegido}
-                className={clsx('flex w-full items-center gap-3 px-3.5 py-2.5 text-left', elegido && 'bg-cancha-clara/60')}
+                className={clsx('flex w-full items-center gap-3 px-3.5 py-2.5 text-left', elegido && 'bg-acento-suave/60')}
               >
                 <Avatar nombre={a.nombre} tam="sm" />
                 <span className="min-w-0 flex-1">
@@ -100,7 +100,7 @@ export function ElegirAlumnos({ elegidos, onChange, excluir = [], uno }: Props) 
                 <span
                   className={clsx(
                     'grid size-6 place-items-center rounded-md border',
-                    elegido ? 'border-cancha bg-cancha text-white' : 'border-linea',
+                    elegido ? 'border-primario bg-primario text-sobre-primario' : 'border-linea',
                   )}
                   aria-hidden
                 >

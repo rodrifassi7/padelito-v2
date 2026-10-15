@@ -1,27 +1,89 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-cancha: #1e5aa0;
-  --color-cancha-oscura: #164679;
-  --color-cancha-clara: #e4edf7;
-  --color-tinta: #13202e;
-  --color-tinta-suave: #5b6878;
-  --color-fondo: #f2f5f8;
-  --color-linea: #dce3ea;
-  --color-pelota: #dcf25a;
-  --color-pelota-oscura: #b9d12e;
-  --color-falta: #c2453d;
-  --color-falta-clara: #f8e6e4;
-  --color-aviso: #b97b16;
-  --color-aviso-clara: #f8eed9;
+/*
+ * Padelito — estilo "Blindex": la app es una cancha azul y las tarjetas son
+ * el vidrio de las paredes. Los colores dependen del contexto:
+ *   - por defecto (fondo azul): texto blanco, vidrio translúcido, acción principal amarilla.
+ *   - .claro (hojas con formularios): fondo claro, texto azul noche, acción principal azul.
+ * Las utilidades (text-tinta, bg-superficie, bg-primario…) leen estas variables,
+ * así el mismo componente se ve bien en los dos contextos.
+ */
+:root {
+  --c-fondo: #1d46c8;
+  --c-superficie: rgb(255 255 255 / 0.14);
+  --c-superficie-fuerte: rgb(255 255 255 / 0.24);
+  --c-borde: rgb(255 255 255 / 0.32);
+  --c-texto: #ffffff;
+  --c-texto-suave: rgb(255 255 255 / 0.82);
+  --c-primario: #d9f24a;
+  --c-sobre-primario: #0e1f5c;
+  --c-acento: #d9f24a;
+  --c-acento-suave: rgb(255 255 255 / 0.16);
+  --c-falta: #ffc2b6;
+  --c-falta-fondo: #ff8a73;
+  --c-sobre-falta: #3a0f08;
+  --c-falta-clara: rgb(255 138 115 / 0.24);
+  --c-aviso: #3a2a00;
+  --c-aviso-clara: #ffd166;
+  --c-brillo: rgb(255 255 255 / 0.5);
+}
 
-  --font-sans: 'Barlow', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, system-ui, sans-serif;
+.claro {
+  --c-fondo: #f3f6ff;
+  --c-superficie: #ffffff;
+  --c-superficie-fuerte: #eaf0fd;
+  --c-borde: #d6def0;
+  --c-texto: #0e1f5c;
+  --c-texto-suave: #4a5a85;
+  --c-primario: #1d46c8;
+  --c-sobre-primario: #ffffff;
+  --c-acento: #1d46c8;
+  --c-acento-suave: #e4ebff;
+  --c-falta: #b23a2c;
+  --c-falta-fondo: #c2453d;
+  --c-sobre-falta: #ffffff;
+  --c-falta-clara: #f9e5e2;
+  --c-aviso: #7a4f05;
+  --c-aviso-clara: #fbefd2;
+  --c-brillo: rgb(255 255 255 / 0);
+  color: var(--c-texto);
+}
+
+@theme inline {
+  --color-fondo: var(--c-fondo);
+  --color-superficie: var(--c-superficie);
+  --color-superficie-fuerte: var(--c-superficie-fuerte);
+  --color-linea: var(--c-borde);
+  --color-tinta: var(--c-texto);
+  --color-tinta-suave: var(--c-texto-suave);
+  --color-primario: var(--c-primario);
+  --color-sobre-primario: var(--c-sobre-primario);
+  --color-acento: var(--c-acento);
+  --color-acento-suave: var(--c-acento-suave);
+  --color-falta: var(--c-falta);
+  --color-falta-fondo: var(--c-falta-fondo);
+  --color-sobre-falta: var(--c-sobre-falta);
+  --color-falta-clara: var(--c-falta-clara);
+  --color-aviso: var(--c-aviso);
+  --color-aviso-clara: var(--c-aviso-clara);
+}
+
+@theme {
+  /* Fijos: no cambian con el contexto. */
+  --color-cancha: #1d46c8;
+  --color-cancha-oscura: #1638a6;
+  --color-noche: #0b1a4a;
+  --color-pelota: #d9f24a;
+  --color-pelota-oscura: #b6cf2a;
+
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Unbounded', 'Figtree', ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    background: var(--c-fondo);
   }
   body {
     @apply bg-fondo text-tinta font-sans antialiased;
@@ -29,7 +91,7 @@
     line-height: 1.45;
   }
   :focus-visible {
-    outline: 2px solid var(--color-cancha);
+    outline: 2px solid var(--c-acento);
     outline-offset: 2px;
   }
   input,
@@ -37,6 +99,17 @@
   textarea {
     font-size: 16px; /* evita el zoom automático en iOS */
   }
+  ::selection {
+    background: #d9f24a;
+    color: #0e1f5c;
+  }
+}
+
+/* El vidrio: tarjetas sobre la cancha. */
+@utility vidrio {
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 var(--c-brillo);
 }
 
 @utility tabular {

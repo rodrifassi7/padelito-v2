@@ -101,7 +101,7 @@ export function AlumnoHoja({ abierta, onCerrar, alumno, onGuardado }: Props) {
           {(id, c) => <textarea id={id} className={c} rows={2} value={f.objetivo ?? ''} onChange={(e) => set('objetivo', e.target.value)} />}
         </Campo>
 
-        <div className="rounded-2xl border border-linea bg-white p-4">
+        <div className="rounded-2xl vidrio border border-linea bg-superficie p-4">
           <Opciones etiqueta="Cómo paga" opciones={MODALIDADES} valor={f.modalidad_pago} onChange={(v) => v && set('modalidad_pago', v)} />
           <div className="mt-4">
             <Campo etiqueta={f.modalidad_pago === 'mensual' ? 'Cuota mensual' : 'Precio por clase'}>
@@ -121,12 +121,12 @@ export function AlumnoHoja({ abierta, onCerrar, alumno, onGuardado }: Props) {
         </Campo>
 
         {alumno && (
-          <label className="flex items-center justify-between gap-4 rounded-xl border border-linea bg-white px-4 py-3">
+          <label className="flex items-center justify-between gap-4 rounded-xl vidrio border border-linea bg-superficie px-4 py-3">
             <span>
               <span className="block font-medium">Alumno activo</span>
               <span className="block text-sm text-tinta-suave">Si lo desactivás, sale de sus clases fijas desde hoy.</span>
             </span>
-            <input type="checkbox" className="size-6 accent-cancha" checked={f.activo} onChange={(e) => set('activo', e.target.checked)} />
+            <input type="checkbox" className="size-6 accent-primario" checked={f.activo} onChange={(e) => set('activo', e.target.checked)} />
           </label>
         )}
       </form>

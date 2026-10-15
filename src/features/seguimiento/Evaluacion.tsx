@@ -14,7 +14,7 @@ export function Barra({ puntaje }: { puntaje: number }) {
   return (
     <span className="flex gap-1" aria-label={`${puntaje} de 5, ${NIVELES_PUNTAJE[puntaje]}`}>
       {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} className={clsx('h-2.5 w-5 rounded-full', n <= puntaje ? 'bg-cancha' : 'bg-linea')} />
+        <span key={n} className={clsx('h-2.5 w-5 rounded-full', n <= puntaje ? 'bg-primario' : 'bg-linea')} />
       ))}
     </span>
   )
@@ -24,7 +24,7 @@ export function Cambio({ delta }: { delta: number }) {
   if (!delta) return <span className="w-8" />
   const sube = delta > 0
   return (
-    <span className={clsx('flex w-8 items-center justify-end text-sm font-semibold tabular', sube ? 'text-cancha' : 'text-falta')}>
+    <span className={clsx('flex w-8 items-center justify-end text-sm font-semibold tabular', sube ? 'text-acento' : 'text-falta')}>
       {sube ? <ArrowUp className="size-3.5" aria-hidden /> : <ArrowDown className="size-3.5" aria-hidden />}
       {Math.abs(delta)}
     </span>
@@ -102,7 +102,7 @@ function EvaluacionHoja({ alumnoId, base, abierta, onCerrar }: { alumnoId: strin
       <div className="flex flex-col gap-6">
         {AREAS.map((a) => (
           <fieldset key={a.valor}>
-            <legend className="mb-2 font-display text-xl font-semibold">{a.texto}</legend>
+            <legend className="mb-2 font-display text-[17px] font-bold tracking-tight">{a.texto}</legend>
             <ul className="flex flex-col gap-2.5">
               {HABILIDADES.filter((h) => h.area === a.valor).map((h) => (
                 <li key={h.clave} className="flex items-center gap-3">
@@ -126,8 +126,8 @@ function EvaluacionHoja({ alumnoId, base, abierta, onCerrar }: { alumnoId: strin
                             })
                           }
                           className={clsx(
-                            'grid size-9 place-items-center rounded-full border font-display text-lg font-semibold tabular',
-                            activo ? 'border-cancha bg-cancha text-white' : 'border-linea bg-white text-tinta-suave',
+                            'grid size-9 place-items-center rounded-full border font-display text-lg font-bold tabular tracking-tight',
+                            activo ? 'border-primario bg-primario text-sobre-primario' : 'border-linea bg-superficie text-tinta-suave',
                           )}
                         >
                           {n}
@@ -171,7 +171,7 @@ export function Evaluaciones({ alumnoId }: { alumnoId: string }) {
           </Boton>
         </div>
       ) : (
-        <div className="rounded-2xl border border-linea bg-white p-4">
+        <div className="rounded-2xl vidrio border border-linea bg-superficie p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <p className="text-tinta-suave">
               {indice === 0 ? 'Última' : 'Evaluación'} del <strong className="text-tinta">{fechaCorta(deIso(ultima.fecha))}</strong>
@@ -180,7 +180,7 @@ export function Evaluaciones({ alumnoId }: { alumnoId: string }) {
             {evaluaciones.length > 1 && (
               <select
                 aria-label="Ver otra evaluación"
-                className="h-9 rounded-lg border border-linea bg-white px-2 text-sm"
+                className="h-9 rounded-lg vidrio border border-linea bg-superficie px-2 text-sm"
                 value={indice}
                 onChange={(e) => setIndice(Number(e.target.value))}
               >

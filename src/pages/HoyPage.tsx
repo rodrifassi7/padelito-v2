@@ -36,38 +36,41 @@ export function HoyPage() {
   return (
     <>
       <MarcaCancha>
-        <div className="flex items-start justify-between gap-3">
-          <p className="pt-2 text-white/80 first-letter:uppercase">{fechaLarga(new Date())}</p>
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-display text-xl font-bold tracking-tight">padelito</span>
           <div className="flex shrink-0 gap-2">
             <button
               onClick={() => setNueva(true)}
-              className="flex h-10 items-center gap-1.5 rounded-full bg-white/15 px-4 font-semibold hover:bg-white/25"
+              className="vidrio flex h-11 items-center gap-1.5 rounded-full border border-white/40 bg-white/15 px-4 font-semibold hover:bg-white/25"
             >
               <Plus className="size-5" aria-hidden /> Clase
             </button>
             <Link
               to="/perfil"
-              className="grid size-10 place-items-center rounded-full bg-white font-display text-lg font-semibold text-cancha"
+              className="vidrio grid size-11 place-items-center rounded-full border border-white/45 bg-white/20 font-semibold"
               aria-label="Tu perfil"
             >
               {profe ? iniciales(profe.nombre) : ''}
             </Link>
           </div>
         </div>
-        <h1 className="mt-1 font-display text-5xl leading-none font-semibold">
-          {primerNombre ? `Hola, ${primerNombre}` : 'Hoy'}
+        <p className="mt-7 text-white/85 first-letter:uppercase">{fechaLarga(new Date())}</p>
+        <h1 className="mt-1.5 font-display text-[36px] leading-[1.05] font-bold tracking-tight">
+          {primerNombre ? (
+            <>
+              Hola,
+              <br />
+              {primerNombre}
+            </>
+          ) : (
+            'Hoy'
+          )}
         </h1>
         {sesiones && (
-          <p className="mt-4 text-lg">
+          <p className="vidrio mt-4 inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/15 px-3.5 py-2 text-[15px] font-medium">
+            <span className="size-2 rounded-full bg-pelota" aria-hidden />
             {resumen(activas.length, alumnos)}
-            {proxima && (
-              <>
-                <br />
-                <span className="text-pelota">
-                  {minutos(proxima.hora) <= ahora ? 'Ahora' : 'Próxima'} a las {hora(proxima.hora)}
-                </span>
-              </>
-            )}
+            {proxima && `. ${minutos(proxima.hora) <= ahora ? 'Ahora' : 'Próxima'} ${hora(proxima.hora)}`}
           </p>
         )}
       </MarcaCancha>

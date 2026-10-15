@@ -29,14 +29,14 @@ export function PagosAlumno({ alumno }: { alumno: Alumno }) {
 
   return (
     <>
-      <div className={`rounded-2xl p-4 ${e.debe ? 'border border-falta/30 bg-falta-clara' : 'bg-pelota'}`}>
-        <p className={`font-display text-2xl font-semibold ${e.debe ? 'text-falta' : 'text-tinta'}`}>{estado}</p>
+      <div className={`rounded-2xl p-4 ${e.debe ? 'border border-falta/30 bg-falta-clara' : 'bg-pelota text-noche'}`}>
+        <p className={`font-display text-xl font-bold ${e.debe ? 'text-falta' : 'text-tinta'}`}>{estado}</p>
         {e.debe && e.monto != null && <p className="text-lg tabular">{pesos(e.monto)}</p>}
         {alumno.tarifa == null && <p className="mt-1 text-sm text-tinta-suave">Cargá su cuota o precio por clase en la ficha.</p>}
         <div className="mt-3 flex gap-2">
           <Boton className="flex-1" onClick={() => setCobrar(true)}>Registrar cobro</Boton>
           {wa && (
-            <a href={wa} target="_blank" rel="noopener" className="flex h-12 items-center gap-2 rounded-xl border border-linea bg-white px-4 font-semibold">
+            <a href={wa} target="_blank" rel="noopener" className="flex h-12 items-center gap-2 rounded-xl vidrio border border-linea bg-superficie px-4 font-semibold">
               <MessageCircle className="size-5" aria-hidden /> Recordar
             </a>
           )}
@@ -44,7 +44,7 @@ export function PagosAlumno({ alumno }: { alumno: Alumno }) {
       </div>
 
       {pagos && pagos.length > 0 && (
-        <ul className="mt-4 overflow-hidden rounded-2xl border border-linea bg-white">
+        <ul className="mt-4 overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">
           {pagos.map((p) => (
             <li key={p.id} className="flex items-center gap-3 border-b border-linea px-4 py-3 last:border-b-0">
               <span className="min-w-0 flex-1">

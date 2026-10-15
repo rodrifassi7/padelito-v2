@@ -35,12 +35,12 @@ function Tablero({ partido, m }: { partido: PartidoEnCurso; m: Marcador }) {
           {nombresPareja(partido, pareja)}
         </span>
         {m.sets.map((s, k) => (
-          <span key={k} className="w-5 text-center font-display text-xl text-white/60 tabular">{s[i]}</span>
+          <span key={k} className="w-5 text-center font-display text-xl text-white/60 tabular tracking-tight">{s[i]}</span>
         ))}
         {!m.ganador && (
           <>
-            <span className="w-6 text-center font-display text-2xl font-semibold tabular">{m.games[i]}</span>
-            <span className="grid h-9 w-12 place-items-center rounded-lg bg-pelota font-display text-2xl font-semibold text-tinta tabular">
+            <span className="w-6 text-center font-display text-xl font-bold tabular tracking-tight">{m.games[i]}</span>
+            <span className="grid h-9 w-12 place-items-center rounded-lg bg-pelota font-display text-[17px] font-bold text-noche tabular tracking-tight">
               {pts[i]}
             </span>
           </>
@@ -100,7 +100,7 @@ export function EnJuegoPage() {
   }
 
   return (
-    <div className="mx-auto flex h-dvh max-w-lg flex-col bg-tinta text-white">
+    <div className="mx-auto flex h-dvh max-w-lg flex-col bg-noche text-white">
       <header className="flex items-start gap-3 px-4 pt-[max(env(safe-area-inset-top),.75rem)] pb-3">
         <button onClick={() => setMenu(true)} className="-ml-1 grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10" aria-label="Opciones del partido">
           <X className="size-5" />
@@ -124,12 +124,12 @@ export function EnJuegoPage() {
               }}
               className="flex h-full w-full flex-col items-center justify-center gap-1.5 p-2 transition-colors active:bg-white/15"
             >
-              <span className="line-clamp-2 text-center font-display text-[1.7rem] leading-none font-semibold">{corto(j.nombre)}</span>
+              <span className="line-clamp-2 text-center font-display text-[21px] leading-none font-bold tracking-tight">{corto(j.nombre)}</span>
               <span className="text-sm text-white/65">{LADO[pos]}</span>
               {(e.winners > 0 || e.noForzados > 0 || e.forzados > 0) && (
                 <span className="mt-1 flex gap-1 text-xs font-semibold tabular" aria-label={`${e.winners} winners, ${e.noForzados} errores no forzados, ${e.forzados} errores forzados`}>
-                  <span className="rounded bg-pelota px-1.5 py-0.5 text-tinta">W {e.winners}</span>
-                  <span className="rounded bg-falta px-1.5 py-0.5">ENF {e.noForzados}</span>
+                  <span className="rounded bg-pelota px-1.5 py-0.5 text-noche">W {e.winners}</span>
+                  <span className="rounded bg-falta-fondo px-1.5 py-0.5 text-sobre-falta">ENF {e.noForzados}</span>
                   <span className="rounded bg-aviso-clara px-1.5 py-0.5 text-aviso">EF {e.forzados}</span>
                 </span>
               )}
@@ -187,7 +187,7 @@ export function EnJuegoPage() {
           <p className="mb-1 text-lg">
             Ganaron <strong>{nombresPareja(partido, m.ganador)}</strong>
           </p>
-          <p className="mb-6 font-display text-3xl font-semibold tabular">
+          <p className="mb-6 font-display text-[23px] font-bold tabular tracking-tight">
             {m.sets.map(([a, b]) => (m.ganador === 1 ? `${a}-${b}` : `${b}-${a}`)).join('  ')}
           </p>
           <div className="flex flex-col gap-3">

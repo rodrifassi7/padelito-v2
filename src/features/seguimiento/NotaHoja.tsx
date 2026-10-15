@@ -107,7 +107,7 @@ export function NotaHoja({ abierta, onCerrar, alumnos, inicial, sesionId, fecha 
                   onClick={() => setAlumnoId(a.id)}
                   className={clsx(
                     'flex h-10 shrink-0 items-center gap-1.5 rounded-full border px-4 font-medium',
-                    activo ? 'border-cancha bg-cancha text-white' : 'border-linea bg-white',
+                    activo ? 'border-primario bg-primario text-sobre-primario' : 'border-linea bg-superficie',
                   )}
                 >
                   {anotados.has(a.id) && <Check className="size-4" aria-hidden />}
@@ -134,12 +134,12 @@ export function NotaHoja({ abierta, onCerrar, alumnos, inicial, sesionId, fecha 
         )}
 
         {tipo !== 'avance' && (
-          <label className="flex items-center justify-between gap-4 rounded-xl border border-linea bg-white px-4 py-3">
+          <label className="flex items-center justify-between gap-4 rounded-xl vidrio border border-linea bg-superficie px-4 py-3">
             <span>
               <span className="block font-medium">Sumar a sus focos de trabajo</span>
               <span className="block text-sm text-tinta-suave">Queda en su lista hasta que lo marques como logrado. El alumno lo ve en su link; la nota queda solo para vos.</span>
             </span>
-            <input type="checkbox" className="size-6 accent-cancha" checked={foco} onChange={(e) => setFoco(e.target.checked)} />
+            <input type="checkbox" className="size-6 accent-primario" checked={foco} onChange={(e) => setFoco(e.target.checked)} />
           </label>
         )}
       </form>

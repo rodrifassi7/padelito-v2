@@ -8,4 +8,4 @@
 - Cambios de esquema: migración nueva en `supabase/migrations/`, nunca editar una ya aplicada.
 - Fechas: la base guarda fechas locales (`date`). Calcular "hoy" en el cliente (`hoyIso()`), no con `current_date` en SQL.
 - Antes de dar algo por terminado: `npm run build` sin errores.
-- Diseño: azul cancha `#1E5AA0`, tinta `#13202E`, fondo `#F2F5F8`, amarillo pelota `#DCF25A` como único acento. Barlow / Barlow Condensed (self-hosted vía @fontsource).
+- Diseño: estilo "Blindex" (cancha azul + tarjetas de vidrio, amarillo pelota como acción). Antes de tocar UI leer `DESIGN.md`: colores por contexto (`.claro` en hojas), Unbounded + Figtree, reglas de contraste.

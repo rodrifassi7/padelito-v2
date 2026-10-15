@@ -37,7 +37,7 @@ export function PerfilPage() {
   return (
     <div className="px-5">
       <div className="pt-3">
-        <Link to="/" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-cancha">
+        <Link to="/" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-acento">
           <ChevronLeft className="size-5" aria-hidden /> Hoy
         </Link>
       </div>

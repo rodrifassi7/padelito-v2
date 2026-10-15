@@ -19,8 +19,8 @@ import { deIso, fechaCorta, hora, hoyIso, iso, NOMBRE_DIA } from '../lib/fechas'
 import type { EstadoAsistencia } from '../lib/tipos'
 
 const COLOR: Record<EstadoAsistencia, string> = {
-  presente: 'bg-pelota text-tinta',
-  ausente: 'bg-falta text-white',
+  presente: 'bg-pelota text-noche',
+  ausente: 'bg-falta-fondo text-sobre-falta',
   aviso: 'bg-aviso-clara text-aviso',
   pendiente: 'bg-linea text-tinta-suave',
 }
@@ -47,11 +47,11 @@ function Asistencia({ alumnoId }: { alumnoId: string }) {
     <>
       {marcadas > 0 && (
         <p className="mb-3">
-          Vino a <strong className="font-display text-2xl tabular">{vino}</strong> de {marcadas} clases en las últimas 8 semanas
+          Vino a <strong className="font-display text-xl tabular tracking-tight">{vino}</strong> de {marcadas} clases en las últimas 8 semanas
           {cuenta('aviso') > 0 && <span className="text-tinta-suave"> (avisó {cuenta('aviso')} veces)</span>}.
         </p>
       )}
-      <ul className="overflow-hidden rounded-2xl border border-linea bg-white">
+      <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">
         {(data ?? []).slice(0, 10).map((r) => {
           const e = estadoDe(r)
           return (
@@ -79,8 +79,8 @@ function ClasesFijas({ alumnoId }: { alumnoId: string }) {
       {data.map((c) => {
         const otros = c.clase_alumnos.map((x) => x.alumno).filter((a) => a.id !== alumnoId)
         return (
-          <li key={c.id} className="flex items-center gap-3 rounded-2xl border border-linea bg-white px-4 py-3">
-            <Repeat className="size-5 shrink-0 text-cancha" aria-hidden />
+          <li key={c.id} className="flex items-center gap-3 rounded-2xl vidrio border border-linea bg-superficie px-4 py-3">
+            <Repeat className="size-5 shrink-0 text-acento" aria-hidden />
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">
                 {NOMBRE_DIA[c.dia_semana]} {hora(c.hora)}
@@ -147,10 +147,10 @@ export function AlumnoPage() {
   return (
     <div className="px-4">
       <div className="flex items-center justify-between pt-3">
-        <Link to="/alumnos" className="-ml-2 flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-cancha">
+        <Link to="/alumnos" className="-ml-2 flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-acento">
           <ChevronLeft className="size-5" aria-hidden /> Alumnos
         </Link>
-        <button onClick={() => setEditar(true)} className="flex h-10 items-center gap-1.5 rounded-lg px-2 font-medium text-cancha">
+        <button onClick={() => setEditar(true)} className="flex h-10 items-center gap-1.5 rounded-lg px-2 font-medium text-acento">
           <Pencil className="size-4" aria-hidden /> Editar
         </button>
       </div>
@@ -158,7 +158,7 @@ export function AlumnoPage() {
       <header className="flex items-center gap-4 pt-3">
         <Avatar nombre={a.nombre} tam="lg" />
         <div className="min-w-0">
-          <h1 className="font-display text-3xl leading-tight font-semibold">{a.nombre}</h1>
+          <h1 className="font-display text-[23px] leading-tight font-bold tracking-tight">{a.nombre}</h1>
           <p className="text-tinta-suave">
             {[textoNivel(a.nivel), a.categoria].filter(Boolean).join(', ') || 'Sin nivel cargado'}
             {!a.activo && <span className="ml-2 font-semibold text-falta">Inactivo</span>}
@@ -168,7 +168,7 @@ export function AlumnoPage() {
 
       <div className="mt-5 grid grid-cols-2 gap-2">
         {a.telefono ? (
-          <a href={linkWhatsapp(a.telefono)} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl border border-linea bg-white font-semibold">
+          <a href={linkWhatsapp(a.telefono)} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl vidrio border border-linea bg-superficie font-semibold">
             <MessageCircle className="size-5" aria-hidden /> WhatsApp
           </a>
         ) : (
@@ -180,21 +180,21 @@ export function AlumnoPage() {
       </div>
 
       {a.objetivo && (
-        <div className="mt-4 rounded-2xl bg-cancha px-4 py-3.5 text-white">
+        <div className="vidrio mt-4 rounded-2xl border border-linea bg-superficie-fuerte px-4 py-3.5">
           <p className="text-sm text-white/75">Quiere lograr</p>
           <p className="text-lg leading-snug">{a.objetivo}</p>
         </div>
       )}
 
       <nav className="sticky top-0 z-20 -mx-4 mt-5 bg-fondo/95 px-4 py-2 backdrop-blur" aria-label="Secciones del alumno">
-        <div className="grid grid-cols-4 gap-1 rounded-xl bg-linea/70 p-1" role="tablist">
+        <div className="grid grid-cols-4 gap-1 rounded-xl vidrio bg-superficie p-1 border border-linea" role="tablist">
           {PESTANAS.map((t) => (
             <button
               key={t.valor}
               role="tab"
               aria-selected={tab === t.valor}
               onClick={() => irA(t.valor)}
-              className={clsx('h-9 rounded-lg text-[15px] font-semibold transition-colors', tab === t.valor ? 'bg-white text-tinta shadow-sm' : 'text-tinta-suave')}
+              className={clsx('h-9 rounded-lg text-[15px] font-semibold transition-colors', tab === t.valor ? 'bg-white text-cancha shadow-sm' : 'text-tinta-suave')}
             >
               {t.texto}
             </button>
@@ -240,14 +240,14 @@ export function AlumnoPage() {
         <div className="mt-5">
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-linea bg-linea">
             {datos.map(([k, v]) => (
-              <div key={k} className="bg-white px-4 py-3">
+              <div key={k} className="bg-superficie px-4 py-3">
                 <dt className="text-sm text-tinta-suave">{k}</dt>
                 <dd className="font-medium">{v}</dd>
               </div>
             ))}
-            {datos.length % 2 === 1 && <div className="bg-white" />}
+            {datos.length % 2 === 1 && <div className="bg-superficie" />}
           </dl>
-          {a.notas && <p className="mt-3 rounded-2xl border border-linea bg-white px-4 py-3 whitespace-pre-line">{a.notas}</p>}
+          {a.notas && <p className="mt-3 rounded-2xl vidrio border border-linea bg-superficie px-4 py-3 whitespace-pre-line">{a.notas}</p>}
           <Boton variante="secundario" ancho className="mt-4" onClick={() => setEditar(true)}>
             <Pencil className="size-4" aria-hidden /> Editar ficha
           </Boton>

@@ -39,7 +39,7 @@ export function RecuperarPage() {
           </Boton>
         </form>
       )}
-      <Link to="/entrar" className="mt-6 inline-block font-semibold text-cancha">
+      <Link to="/entrar" className="mt-6 inline-block font-semibold text-acento">
         Volver a entrar
       </Link>
     </PantallaAcceso>
@@ -68,7 +68,7 @@ export function NuevaClavePage() {
     return (
       <PantallaAcceso titulo="El link venció">
         <p className="text-lg">Pedí uno nuevo y abrilo desde este mismo celular o compu.</p>
-        <Link to="/recuperar" className="mt-6 inline-block font-semibold text-cancha">
+        <Link to="/recuperar" className="mt-6 inline-block font-semibold text-acento">
           Pedir otro link
         </Link>
       </PantallaAcceso>

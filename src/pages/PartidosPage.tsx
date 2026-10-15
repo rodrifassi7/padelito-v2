@@ -37,9 +37,9 @@ export function PartidosPage() {
       </Titulo>
 
       {enCurso && m && (
-        <Link to="/partidos/en-juego" className="mb-5 block rounded-2xl bg-tinta p-4 text-white">
+        <Link to="/partidos/en-juego" className="mb-5 block rounded-2xl bg-noche p-4 text-white">
           <p className="text-sm text-pelota">En juego</p>
-          <p className="mt-1 font-display text-xl font-semibold">
+          <p className="mt-1 font-display text-[17px] font-bold tracking-tight">
             {enCurso.jugadores.slice(0, 2).map((j) => j.nombre.split(' ')[0]).join(' / ')} vs{' '}
             {enCurso.jugadores.slice(2).map((j) => j.nombre.split(' ')[0]).join(' / ')}
           </p>
@@ -61,7 +61,7 @@ export function PartidosPage() {
       )}
 
       {partidos && partidos.length > 0 && (
-        <ul className="overflow-hidden rounded-2xl border border-linea bg-white">
+        <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">
           {partidos.map((p) => (
             <li key={p.id} className="border-b border-linea last:border-b-0">
               <Link to={`/partidos/${p.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-fondo">
@@ -70,7 +70,7 @@ export function PartidosPage() {
                   <span className={clsx('block truncate', p.ganador === 1 && 'font-semibold')}>{pareja(p, 1)}</span>
                   <span className={clsx('block truncate', p.ganador === 2 && 'font-semibold')}>{pareja(p, 2)}</span>
                 </span>
-                <span className="text-right font-display text-lg leading-tight tabular">
+                <span className="text-right font-display text-lg leading-tight tabular tracking-tight">
                   <span className="block">{p.sets.map((s) => s[0]).join(' ')}</span>
                   <span className="block">{p.sets.map((s) => s[1]).join(' ')}</span>
                 </span>

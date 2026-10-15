@@ -36,7 +36,7 @@ interface Props {
 
 export function Cancha({ children, className }: Props) {
   return (
-    <div className={clsx('relative overflow-hidden rounded-3xl border-4 border-white/80 bg-cancha', className)}>
+    <div className={clsx('relative overflow-hidden rounded-3xl border-4 border-white/80 bg-cancha-oscura', className)}>
       <Lineas />
       <div className="absolute inset-0 grid grid-rows-[1fr_auto_1fr]">
         {DISTRIBUCION.map((fila, i) => (

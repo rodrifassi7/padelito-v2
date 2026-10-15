@@ -14,8 +14,8 @@ const GOLPES_FOCO = GOLPES.filter((g) => g.clave !== 'smash_x3' && g.clave !== '
 
 const ESTILO_ESTADO: Record<EstadoFoco, string> = {
   pendiente: 'bg-linea text-tinta-suave',
-  trabajando: 'bg-cancha text-white',
-  logrado: 'bg-pelota text-tinta',
+  trabajando: 'bg-primario text-sobre-primario',
+  logrado: 'bg-pelota text-noche',
 }
 
 export function EstadoFocoChip({ estado, onClick }: { estado: EstadoFoco; onClick?: () => void }) {
@@ -135,21 +135,21 @@ export function Focos({ alumnoId }: { alumnoId: string }) {
       ) : (
         <>
           {activos.length > 0 ? (
-            <ul className="overflow-hidden rounded-2xl border border-linea bg-white">{activos.map(fila)}</ul>
+            <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">{activos.map(fila)}</ul>
           ) : (
-            <p className="rounded-2xl border border-linea bg-white px-4 py-3 text-tinta-suave">Logró todo lo que tenía pendiente.</p>
+            <p className="rounded-2xl vidrio border border-linea bg-superficie px-4 py-3 text-tinta-suave">Logró todo lo que tenía pendiente.</p>
           )}
           <div className="mt-2 flex items-center justify-between">
             {logrados.length > 0 ? (
-              <button type="button" onClick={() => setVerLogrados(!verLogrados)} className="flex h-10 items-center gap-1 font-medium text-cancha">
+              <button type="button" onClick={() => setVerLogrados(!verLogrados)} className="flex h-10 items-center gap-1 font-medium text-acento">
                 Logrados ({logrados.length}) <ChevronDown className={clsx('size-4 transition-transform', verLogrados && 'rotate-180')} aria-hidden />
               </button>
             ) : <span />}
-            <button type="button" onClick={() => setNuevo(true)} className="flex h-10 items-center gap-1 font-medium text-cancha">
+            <button type="button" onClick={() => setNuevo(true)} className="flex h-10 items-center gap-1 font-medium text-acento">
               <Plus className="size-4" aria-hidden /> Foco
             </button>
           </div>
-          {verLogrados && <ul className="mt-1 overflow-hidden rounded-2xl border border-linea bg-white">{logrados.map(fila)}</ul>}
+          {verLogrados && <ul className="mt-1 overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">{logrados.map(fila)}</ul>}
         </>
       )}
       <FocoHoja alumnoId={alumnoId} foco={editando} abierta={nuevo || editando !== null} onCerrar={() => { setNuevo(false); setEditando(null) }} />

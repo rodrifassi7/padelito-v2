@@ -87,7 +87,7 @@ export function NuevaClaseHoja({ abierta, onCerrar, fecha: fechaInicial, onCread
 
         <Opciones etiqueta="Duración" opciones={DURACIONES} valor={duracion} onChange={(v) => v && setDuracion(v)} />
 
-        <label className="flex items-center justify-between gap-4 rounded-xl border border-linea bg-white px-4 py-3">
+        <label className="flex items-center justify-between gap-4 rounded-xl vidrio border border-linea bg-superficie px-4 py-3">
           <span>
             <span className="block font-medium">Se repite todas las semanas</span>
             <span className="block text-sm text-tinta-suave">
@@ -96,7 +96,7 @@ export function NuevaClaseHoja({ abierta, onCerrar, fecha: fechaInicial, onCread
           </span>
           <input
             type="checkbox"
-            className="size-6 accent-cancha"
+            className="size-6 accent-primario"
             checked={repetir}
             onChange={(e) => setRepetir(e.target.checked)}
           />

@@ -52,7 +52,7 @@ export function NuevoPartidoPage() {
   if (partido) {
     return (
       <div className="flex min-h-dvh flex-col justify-center gap-4 px-5">
-        <h1 className="font-display text-3xl font-semibold">Hay un partido en juego</h1>
+        <h1 className="font-display text-[23px] font-bold tracking-tight">Hay un partido en juego</h1>
         <p className="text-tinta-suave">
           {partido.jugadores.map((j) => j.nombre.split(' ')[0]).join(', ')}. Seguilo o descartalo para empezar otro.
         </p>
@@ -67,11 +67,11 @@ export function NuevoPartidoPage() {
   return (
     <div className="px-4 pb-8">
       <div className="pt-3">
-        <Link to="/partidos" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-cancha">
+        <Link to="/partidos" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-acento">
           <ChevronLeft className="size-5" aria-hidden /> Partidos
         </Link>
       </div>
-      <h1 className="pt-2 pb-1 font-display text-4xl font-semibold">Nuevo partido</h1>
+      <h1 className="pt-2 pb-1 font-display text-[28px] font-bold tracking-tight">Nuevo partido</h1>
       <p className="mb-4 text-tinta-suave">Tocá cada lugar de la cancha para ubicar a los jugadores.</p>
 
       <div className="relative">
@@ -86,7 +86,7 @@ export function NuevoPartidoPage() {
               >
                 {j ? (
                   <>
-                    <span className="line-clamp-2 text-center font-display text-xl leading-tight font-semibold">{j.nombre}</span>
+                    <span className="line-clamp-2 text-center font-display text-[17px] leading-tight font-bold tracking-tight">{j.nombre}</span>
                     <span className="text-sm text-white/70">{LADO[pos]}{!j.alumno_id && ', invitado'}</span>
                   </>
                 ) : (
@@ -120,12 +120,12 @@ export function NuevoPartidoPage() {
 
       <div className="mt-6 flex flex-col gap-5">
         <Opciones etiqueta="Formato" opciones={FORMATOS} valor={formato} onChange={(v) => v && setFormato(v)} />
-        <label className="flex items-center justify-between gap-4 rounded-xl border border-linea bg-white px-4 py-3">
+        <label className="flex items-center justify-between gap-4 rounded-xl vidrio border border-linea bg-superficie px-4 py-3">
           <span>
             <span className="block font-medium">Punto de oro</span>
             <span className="block text-sm text-tinta-suave">{puntoDeOro ? 'En 40 iguales, el próximo punto gana el game' : 'Se juega con ventaja'}</span>
           </span>
-          <input type="checkbox" className="size-6 accent-cancha" checked={puntoDeOro} onChange={(e) => setPuntoDeOro(e.target.checked)} />
+          <input type="checkbox" className="size-6 accent-primario" checked={puntoDeOro} onChange={(e) => setPuntoDeOro(e.target.checked)} />
         </label>
         <Boton ancho disabled={!completos} onClick={empezar}>
           {completos ? 'Empezar partido' : 'Faltan jugadores'}

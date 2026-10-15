@@ -31,12 +31,12 @@ export function PartidoPage() {
   return (
     <div className="px-4 pb-6">
       <div className="pt-3">
-        <Link to="/partidos" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-cancha">
+        <Link to="/partidos" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-acento">
           <ChevronLeft className="size-5" aria-hidden /> Partidos
         </Link>
       </div>
 
-      <header className="mt-2 rounded-2xl bg-cancha p-4 text-white">
+      <header className="vidrio mt-2 rounded-2xl border border-linea bg-superficie-fuerte p-4">
         <p className="text-sm text-white/75 first-letter:uppercase">
           {fechaLarga(deIso(p.fecha))}, {FORMATO[p.formato]}
           {p.duracion_min ? `, ${p.duracion_min} min` : ''}
@@ -50,7 +50,7 @@ export function PartidoPage() {
               {p.sets.map(([a, b], k) => {
                 const [mio, otro] = n === 1 ? [a, b] : [b, a]
                 return (
-                  <span key={k} className={`w-7 text-center font-display text-3xl font-semibold tabular ${mio > otro ? 'text-pelota' : 'text-white/70'}`}>
+                  <span key={k} className={`w-7 text-center font-display text-[23px] font-bold tabular ${mio > otro ? 'text-pelota' : 'text-white/70'}`}>
                     {mio}
                   </span>
                 )
@@ -73,11 +73,11 @@ export function PartidoPage() {
                 encabezado={
                   <div className="mb-3 flex items-baseline justify-between gap-3">
                     {j.alumno_id ? (
-                      <Link to={`/alumnos/${j.alumno_id}`} className="truncate font-display text-xl font-semibold text-cancha">
+                      <Link to={`/alumnos/${j.alumno_id}`} className="truncate font-display text-[17px] font-bold text-acento tracking-tight">
                         {j.nombre}
                       </Link>
                     ) : (
-                      <span className="truncate font-display text-xl font-semibold">{j.nombre}</span>
+                      <span className="truncate font-display text-[17px] font-bold tracking-tight">{j.nombre}</span>
                     )}
                     <span className="shrink-0 text-sm text-tinta-suave">{LADO[j.posicion]}</span>
                   </div>

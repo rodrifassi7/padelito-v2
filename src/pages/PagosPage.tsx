@@ -62,13 +62,13 @@ export function PagosPage() {
                 href={wa}
                 target="_blank"
                 rel="noopener"
-                className="flex h-10 items-center gap-1.5 rounded-xl border border-linea px-3.5 text-sm font-semibold text-cancha hover:bg-cancha-clara"
+                className="flex h-10 items-center gap-1.5 rounded-xl border border-linea px-3.5 text-sm font-semibold text-acento hover:bg-acento-suave"
                 aria-label={`Mandarle el recordatorio a ${e.alumno.nombre} por WhatsApp`}
               >
                 <MessageCircle className="size-4" aria-hidden /> Recordar
               </a>
             )}
-            <button onClick={() => setCobrando(e)} className="h-10 rounded-xl bg-cancha px-4 text-sm font-semibold text-white hover:bg-cancha-oscura">
+            <button onClick={() => setCobrando(e)} className="h-10 rounded-xl bg-primario px-4 text-sm font-semibold text-sobre-primario hover:brightness-95">
               Cobrar
             </button>
           </div>
@@ -85,7 +85,7 @@ export function PagosPage() {
         <button onClick={() => setPeriodo(mesDe(iso(addMonths(deIso(periodo), -1))))} className="grid size-10 place-items-center rounded-full hover:bg-linea/60" aria-label="Mes anterior">
           <ChevronLeft className="size-5" />
         </button>
-        <p className="font-display text-xl font-semibold first-letter:uppercase">{mesCorto(deIso(periodo))}</p>
+        <p className="font-display text-[17px] font-bold first-letter:uppercase tracking-tight">{mesCorto(deIso(periodo))}</p>
         <button
           onClick={() => setPeriodo(mesDe(iso(addMonths(deIso(periodo), 1))))}
           disabled={esMesActual}
@@ -103,27 +103,27 @@ export function PagosPage() {
       {estados.length > 0 && (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-cancha px-4 py-3.5 text-white">
-              <p className="text-sm text-white/75">Cobrado</p>
-              <p className="font-display text-3xl font-semibold tabular">{pesos(cobrado)}</p>
+            <div className="rounded-2xl bg-pelota px-4 py-3.5 text-noche">
+              <p className="text-sm text-noche/75">Cobrado</p>
+              <p className="font-display text-[23px] font-bold tabular tracking-tight">{pesos(cobrado)}</p>
             </div>
-            <div className="rounded-2xl border border-linea bg-white px-4 py-3.5">
+            <div className="rounded-2xl vidrio border border-linea bg-superficie px-4 py-3.5">
               <p className="text-sm text-tinta-suave">Falta cobrar</p>
-              <p className="font-display text-3xl font-semibold tabular">{pesos(falta)}</p>
+              <p className="font-display text-[23px] font-bold tabular tracking-tight">{pesos(falta)}</p>
             </div>
           </div>
 
           <Seccion titulo={deben.length ? `Deben (${deben.length})` : 'Deben'}>
             {deben.length ? (
-              <ul className="overflow-hidden rounded-2xl border border-linea bg-white">{deben.map(fila)}</ul>
+              <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">{deben.map(fila)}</ul>
             ) : (
-              <p className="rounded-2xl border border-linea bg-white px-4 py-3 text-tinta-suave">Todos al día.</p>
+              <p className="rounded-2xl vidrio border border-linea bg-superficie px-4 py-3 text-tinta-suave">Todos al día.</p>
             )}
           </Seccion>
 
           {alDia.length > 0 && (
             <Seccion titulo={`Al día (${alDia.length})`}>
-              <ul className="overflow-hidden rounded-2xl border border-linea bg-white">{alDia.map(fila)}</ul>
+              <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">{alDia.map(fila)}</ul>
             </Seccion>
           )}
 

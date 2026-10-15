@@ -6,8 +6,8 @@ import { golpesPara, textoTipo, TIPOS } from './golpes'
 import type { Jugador, TipoPunto } from './tipos'
 
 const ESTILO_TIPO: Record<TipoPunto, string> = {
-  winner: 'bg-pelota text-tinta',
-  error_no_forzado: 'bg-falta text-white',
+  winner: 'bg-pelota text-noche',
+  error_no_forzado: 'bg-falta-fondo text-sobre-falta',
   error_forzado: 'bg-aviso-clara text-aviso border border-aviso/40',
 }
 
@@ -34,7 +34,7 @@ export function MarcarPuntoHoja({ jugador, onCerrar, onMarcar }: Props) {
               key={t.valor}
               type="button"
               onClick={() => setTipo(t.valor)}
-              className={clsx('h-[4.5rem] rounded-2xl font-display text-2xl font-semibold active:scale-[.98]', ESTILO_TIPO[t.valor])}
+              className={clsx('h-[4.5rem] rounded-2xl font-display text-xl font-bold active:scale-[.98] tracking-tight', ESTILO_TIPO[t.valor])}
             >
               {t.texto}
             </button>
@@ -56,7 +56,7 @@ export function MarcarPuntoHoja({ jugador, onCerrar, onMarcar }: Props) {
                 key={g.clave}
                 type="button"
                 onClick={() => onMarcar(tipo, g.clave)}
-                className="h-12 rounded-xl border border-linea bg-white font-semibold hover:border-cancha active:bg-cancha-clara"
+                className="h-12 rounded-xl vidrio border border-linea bg-superficie font-semibold hover:border-primario active:bg-acento-suave"
               >
                 {g.texto}
               </button>

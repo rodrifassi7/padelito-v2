@@ -38,7 +38,7 @@ export function ElegirJugadorHoja({ abierta, titulo, ocupados, onCerrar, onElegi
         <Search className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
         <input
           autoFocus
-          className="w-full rounded-xl border border-linea bg-white py-3 pr-3.5 pl-11 focus:border-cancha focus:ring-2 focus:ring-cancha/20 focus:outline-none"
+          className="w-full rounded-xl vidrio border border-linea bg-superficie py-3 pr-3.5 pl-11 focus:border-primario focus:ring-2 focus:ring-primario/30 focus:outline-none"
           placeholder="Alumno, o el nombre de un rival"
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
@@ -49,13 +49,13 @@ export function ElegirJugadorHoja({ abierta, titulo, ocupados, onCerrar, onElegi
         <button
           type="button"
           onClick={() => onElegir({ alumno_id: null, nombre })}
-          className="mb-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-cancha/50 px-3.5 py-3 text-left"
+          className="mb-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-primario/50 px-3.5 py-3 text-left"
         >
-          <span className="grid size-8 place-items-center rounded-full bg-white text-tinta-suave">
+          <span className="grid size-8 place-items-center rounded-full bg-superficie text-tinta-suave">
             <UserRound className="size-4" aria-hidden />
           </span>
           <span>
-            <span className="block font-medium text-cancha">Usar «{nombre}»</span>
+            <span className="block font-medium text-acento">Usar «{nombre}»</span>
             <span className="block text-sm text-tinta-suave">Solo para este partido, no se agrega como alumno</span>
           </span>
         </button>
@@ -64,7 +64,7 @@ export function ElegirJugadorHoja({ abierta, titulo, ocupados, onCerrar, onElegi
       {isPending ? (
         <Cargando />
       ) : (
-        <ul className="overflow-hidden rounded-xl border border-linea bg-white">
+        <ul className="overflow-hidden rounded-xl vidrio border border-linea bg-superficie">
           {lista.length === 0 && (
             <li className="px-4 py-4 text-tinta-suave">
               {texto ? 'Ningún alumno con ese nombre.' : 'No hay alumnos para elegir. Escribí un nombre.'}

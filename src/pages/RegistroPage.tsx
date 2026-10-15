@@ -32,7 +32,7 @@ export function RegistroPage() {
         <p className="text-lg">
           Te mandamos un link a <strong>{email}</strong>. Abrilo para activar la cuenta y después entrá.
         </p>
-        <Link to="/entrar" className="mt-6 inline-block font-semibold text-cancha">
+        <Link to="/entrar" className="mt-6 inline-block font-semibold text-acento">
           Ir a entrar
         </Link>
       </PantallaAcceso>
@@ -63,7 +63,7 @@ export function RegistroPage() {
       </form>
       <p className="mt-6 text-center text-tinta-suave">
         ¿Ya tenés cuenta?{' '}
-        <Link to="/entrar" className="font-semibold text-cancha">
+        <Link to="/entrar" className="font-semibold text-acento">
           Entrá
         </Link>
       </p>

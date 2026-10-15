@@ -42,7 +42,7 @@ export function AlumnosPage() {
           <span className="sr-only">Buscar alumno</span>
           <Search className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
           <input
-            className="w-full rounded-xl border border-linea bg-white py-3 pr-3.5 pl-11 focus:border-cancha focus:ring-2 focus:ring-cancha/20 focus:outline-none"
+            className="w-full rounded-xl vidrio border border-linea bg-superficie py-3 pr-3.5 pl-11 focus:border-primario focus:ring-2 focus:ring-primario/30 focus:outline-none"
             placeholder="Buscar"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
@@ -64,7 +64,7 @@ export function AlumnosPage() {
       )}
 
       {lista.length > 0 && (
-        <ul className="overflow-hidden rounded-2xl border border-linea bg-white">
+        <ul className="overflow-hidden rounded-2xl vidrio border border-linea bg-superficie">
           {lista.map((a) => (
             <li key={a.id} className="border-b border-linea last:border-b-0">
               <Link to={`/alumnos/${a.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-fondo">
@@ -83,7 +83,7 @@ export function AlumnosPage() {
       )}
 
       {inactivos > 0 && (
-        <button onClick={() => setVerInactivos(!verInactivos)} className="mx-auto mt-5 block h-10 px-3 font-medium text-cancha">
+        <button onClick={() => setVerInactivos(!verInactivos)} className="mx-auto mt-5 block h-10 px-3 font-medium text-acento">
           {verInactivos ? 'Ver alumnos activos' : `Ver inactivos (${inactivos})`}
         </button>
       )}

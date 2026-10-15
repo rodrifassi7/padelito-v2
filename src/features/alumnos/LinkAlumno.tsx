@@ -42,7 +42,7 @@ export function LinkAlumno({ alumno }: { alumno: Alumno }) {
 
   return (
     <>
-      <button onClick={() => setAbierta(true)} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-linea bg-white font-semibold">
+      <button onClick={() => setAbierta(true)} className="flex h-12 items-center justify-center gap-2 rounded-xl vidrio border border-linea bg-superficie font-semibold">
         <Link2 className="size-5" aria-hidden /> Su progreso
       </button>
       <Hoja abierta={abierta} onCerrar={() => setAbierta(false)} titulo={`Link de ${nombre}`}>
@@ -50,17 +50,17 @@ export function LinkAlumno({ alumno }: { alumno: Alumno }) {
           Una página donde {nombre} ve su objetivo, en qué está trabajando, lo que ya logró, su última evaluación y cómo le va en los partidos.
           No muestra tus notas de clase ni los pagos.
         </p>
-        <p className="mb-4 rounded-xl border border-linea bg-white px-3.5 py-3 text-sm break-all select-all">{url}</p>
+        <p className="mb-4 rounded-xl vidrio border border-linea bg-superficie px-3.5 py-3 text-sm break-all select-all">{url}</p>
         <div className="flex flex-col gap-3">
           {alumno.telefono && (
-            <a href={linkWhatsapp(alumno.telefono, mensaje)} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-cancha font-semibold text-white hover:bg-cancha-oscura">
+            <a href={linkWhatsapp(alumno.telefono, mensaje)} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-primario font-semibold text-sobre-primario hover:brightness-95">
               <MessageCircle className="size-5" aria-hidden /> Mandárselo por WhatsApp
             </a>
           )}
           <Boton variante="secundario" ancho onClick={copiar}>
             <Copy className="size-5" aria-hidden /> Copiar link
           </Boton>
-          <a href={url} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl font-semibold text-cancha hover:bg-cancha-clara">
+          <a href={url} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl font-semibold text-acento hover:bg-acento-suave">
             <ExternalLink className="size-5" aria-hidden /> Ver cómo lo ve {nombre}
           </a>
           <button

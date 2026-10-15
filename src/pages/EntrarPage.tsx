@@ -2,17 +2,18 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { Boton, Campo } from '../components/ui'
-import { MarcaCancha } from '../components/MarcaCancha'
+import { FondoCancha, MarcaCancha } from '../components/MarcaCancha'
 import { mensajeError, supabase } from '../lib/supabase'
 
 export function PantallaAcceso({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="mx-auto min-h-dvh max-w-lg">
+    <div className="relative isolate mx-auto min-h-dvh max-w-lg">
+      <FondoCancha pelota="abajo" />
       <MarcaCancha>
-        <p className="font-display text-xl font-semibold text-pelota">Padelito</p>
-        <h1 className="mt-6 font-display text-4xl leading-tight font-semibold">{titulo}</h1>
+        <p className="font-display text-xl font-bold tracking-tight">padelito</p>
+        <h1 className="mt-10 font-display text-[30px] leading-[1.1] font-bold tracking-tight">{titulo}</h1>
       </MarcaCancha>
-      <div className="px-5 py-7">{children}</div>
+      <div className="claro vidrio mx-4 mt-4 rounded-3xl bg-fondo p-5 shadow-2xl">{children}</div>
     </div>
   )
 }
@@ -52,7 +53,7 @@ export function EntrarPage() {
       </Link>
       <p className="mt-6 text-center text-tinta-suave">
         ¿Primera vez?{' '}
-        <Link to="/registro" className="font-semibold text-cancha">
+        <Link to="/registro" className="font-semibold text-acento">
           Creá tu cuenta
         </Link>
       </p>

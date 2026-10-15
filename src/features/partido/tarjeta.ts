@@ -8,9 +8,9 @@ import type { Jugador, Pareja, Posicion } from './tipos'
  */
 
 const C = {
-  cancha: '#1E5AA0',
-  canchaOscura: '#164679',
-  pelota: '#DCF25A',
+  cancha: '#1D46C8',
+  canchaOscura: '#1638A6',
+  pelota: '#D9F24A',
   blanco: '#FFFFFF',
   tenue: 'rgba(255,255,255,0.68)',
   linea: 'rgba(255,255,255,0.16)',
@@ -18,8 +18,8 @@ const C = {
   tinta: '#13202E',
   falta: '#F08C84',
 }
-const DISPLAY = '"Barlow Condensed", "Barlow", sans-serif'
-const TEXTO = '"Barlow", sans-serif'
+const DISPLAY = '"Unbounded", "Figtree", sans-serif'
+const TEXTO = '"Figtree", sans-serif'
 
 export interface DatosTarjeta {
   fecha: string // "jueves 15 de octubre"
@@ -80,7 +80,7 @@ function lineasCancha(ctx: CanvasRenderingContext2D) {
 
 export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
   await Promise.all([
-    document.fonts.load(`600 80px ${DISPLAY}`),
+    document.fonts.load(`700 80px ${DISPLAY}`),
     document.fonts.load(`500 40px ${DISPLAY}`),
     document.fonts.load(`500 40px ${TEXTO}`),
   ]).catch(() => undefined)
@@ -100,8 +100,8 @@ export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
   // Encabezado
   ctx.fillStyle = C.pelota
   ctx.textAlign = 'left'
-  fuente(ctx, 600, 60)
-  ctx.fillText('Padelito', M, 170)
+  fuente(ctx, 700, 54)
+  ctx.fillText('padelito', M, 170)
   ctx.fillStyle = C.tenue
   ctx.textAlign = 'right'
   fuente(ctx, 500, 40, TEXTO)
@@ -122,8 +122,8 @@ export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
     const nombres = pareja(n).map((j) => nombreCorto(j.nombre))
     ctx.textAlign = 'left'
     ctx.fillStyle = gano ? C.blanco : C.tenue
-    texto(ctx, nombres[0] ?? '', M + 20, y - 50, W - 2 * M - anchoSets - 60, 600, 76)
-    texto(ctx, nombres[1] ?? '', M + 20, y + 30, W - 2 * M - anchoSets - 60, 600, 76)
+    texto(ctx, nombres[0] ?? '', M + 20, y - 50, W - 2 * M - anchoSets - 60, 700, 76)
+    texto(ctx, nombres[1] ?? '', M + 20, y + 30, W - 2 * M - anchoSets - 60, 700, 76)
     if (gano) {
       ctx.fillStyle = C.pelota
       ctx.beginPath()
@@ -134,7 +134,7 @@ export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
     d.sets.forEach(([a, b], k) => {
       const [mio, otro] = n === 1 ? [a, b] : [b, a]
       ctx.fillStyle = mio > otro ? C.pelota : C.tenue
-      fuente(ctx, 600, mio >= 10 ? 104 : 130)
+      fuente(ctx, 700, mio >= 10 ? 84 : 112)
       ctx.fillText(String(mio), W - M - anchoSets + 55 + k * 110, y + 24)
     })
   }
@@ -157,7 +157,7 @@ export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
     fuente(ctx, 500, 40, TEXTO)
     ctx.fillText('Figura del partido', M, y)
     ctx.fillStyle = C.pelota
-    texto(ctx, fig.j.nombre, M, y + 110, W - 2 * M, 600, 110)
+    texto(ctx, fig.j.nombre, M, y + 110, W - 2 * M, 700, 110)
     ctx.fillStyle = C.blanco
     fuente(ctx, 500, 42, TEXTO)
     const en = fig.e.noForzados
@@ -187,7 +187,7 @@ export async function dibujarTarjeta(d: DatosTarjeta): Promise<Blob> {
       ctx.fillStyle = C.blanco
       texto(ctx, j.nombre, M, y, W - 2 * M - 360, 500, 50)
       ctx.textAlign = 'right'
-      fuente(ctx, 600, 58)
+      fuente(ctx, 700, 58)
       ctx.fillStyle = C.pelota
       ctx.fillText(String(e.winners), W - M - 170, y + 2)
       ctx.fillStyle = C.blanco

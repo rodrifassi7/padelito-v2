@@ -12,8 +12,8 @@ import { textoArea, textoTipoNota } from './catalogo'
 import { NotaHoja } from './NotaHoja'
 
 const ESTILO: Record<TipoNota, string> = {
-  a_mejorar: 'bg-cancha-clara text-cancha-oscura',
-  avance: 'bg-pelota text-tinta',
+  a_mejorar: 'bg-acento-suave text-tinta',
+  avance: 'bg-pelota text-noche',
   error: 'bg-falta-clara text-falta',
 }
 
@@ -33,7 +33,7 @@ export function Notas({ alumno }: { alumno: { id: string; nombre: string } }) {
       ) : (
         <ol className="flex flex-col gap-2">
           {lista.map((n) => (
-            <li key={n.id} className="rounded-2xl border border-linea bg-white px-4 py-3">
+            <li key={n.id} className="rounded-2xl vidrio border border-linea bg-superficie px-4 py-3">
               <div className="mb-1 flex items-center gap-2 text-sm">
                 <span className="text-tinta-suave tabular">{fechaCorta(deIso(n.fecha))}</span>
                 <span className={clsx('rounded-md px-1.5 py-0.5 font-semibold', ESTILO[n.tipo])}>{textoTipoNota(n.tipo)}</span>
@@ -56,11 +56,11 @@ export function Notas({ alumno }: { alumno: { id: string; nombre: string } }) {
       )}
       <div className="mt-2 flex items-center justify-between">
         {(notas?.length ?? 0) > 5 ? (
-          <button type="button" onClick={() => setVerTodas(!verTodas)} className="h-10 font-medium text-cancha">
+          <button type="button" onClick={() => setVerTodas(!verTodas)} className="h-10 font-medium text-acento">
             {verTodas ? 'Ver menos' : `Ver todas (${notas!.length})`}
           </button>
         ) : <span />}
-        <button type="button" onClick={() => setNueva(true)} className="flex h-10 items-center gap-1 font-medium text-cancha">
+        <button type="button" onClick={() => setNueva(true)} className="flex h-10 items-center gap-1 font-medium text-acento">
           <Plus className="size-4" aria-hidden /> Nota
         </button>
       </div>

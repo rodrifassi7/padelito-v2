@@ -98,7 +98,7 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
           <div className="flex flex-col gap-3">
             {fija && (
               <label className="flex items-center gap-3">
-                <input type="checkbox" className="size-5 accent-cancha" checked={todasLasSemanas} onChange={(e) => setTodasLasSemanas(e.target.checked)} />
+                <input type="checkbox" className="size-5 accent-primario" checked={todasLasSemanas} onChange={(e) => setTodasLasSemanas(e.target.checked)} />
                 <span>Todos los {dia}, no solo esta clase</span>
               </label>
             )}
@@ -164,25 +164,25 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
       </div>
 
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="font-display text-xl font-semibold">Alumnos</h3>
+        <h3 className="font-display text-[17px] font-bold tracking-tight">Alumnos</h3>
         {!cancelada && (
-          <button onClick={() => setModo({ tipo: 'sumar' })} className="flex h-10 items-center gap-1.5 rounded-lg px-2 font-semibold text-cancha hover:bg-cancha-clara">
+          <button onClick={() => setModo({ tipo: 'sumar' })} className="flex h-10 items-center gap-1.5 rounded-lg px-2 font-semibold text-acento hover:bg-acento-suave">
             <UserPlus className="size-5" aria-hidden /> Sumar
           </button>
         )}
       </div>
-      <ul className="mb-7 overflow-hidden rounded-xl border border-linea bg-white">
+      <ul className="mb-7 overflow-hidden rounded-xl vidrio border border-linea bg-superficie">
         {sesion.asistencias.length === 0 && <li className="px-4 py-4 text-tinta-suave">Nadie anotado todavía.</li>}
         {sesion.asistencias.map((a) => (
           <li key={a.alumno_id} className="flex items-center gap-3 border-b border-linea px-3.5 py-2 last:border-b-0">
             <Avatar nombre={a.alumno.nombre} tam="sm" />
-            <Link to={`/alumnos/${a.alumno_id}`} onClick={onCerrar} className="min-w-0 flex-1 truncate font-medium hover:text-cancha">
+            <Link to={`/alumnos/${a.alumno_id}`} onClick={onCerrar} className="min-w-0 flex-1 truncate font-medium hover:text-acento">
               {a.alumno.nombre}
             </Link>
             {!cancelada && (
               <button
                 onClick={() => setModo({ tipo: 'nota', alumnoId: a.alumno_id })}
-                className="grid size-9 place-items-center rounded-full text-cancha hover:bg-cancha-clara"
+                className="grid size-9 place-items-center rounded-full text-acento hover:bg-acento-suave"
                 aria-label={`Nota para ${a.alumno.nombre}`}
               >
                 <NotebookPen className="size-4" />

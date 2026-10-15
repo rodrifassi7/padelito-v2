@@ -78,15 +78,15 @@ export function AgendaPage() {
               onClick={() => setDia(clave)}
               className={clsx(
                 'flex h-[4.5rem] flex-col items-center justify-center rounded-xl border transition-colors',
-                elegido ? 'border-cancha bg-cancha text-white' : 'border-linea bg-white',
-                !elegido && esHoy(d) && 'border-cancha text-cancha',
+                elegido ? 'border-primario bg-primario text-sobre-primario' : 'border-linea bg-superficie',
+                !elegido && esHoy(d) && 'border-primario text-acento',
               )}
             >
               <span className={clsx('text-sm', elegido ? 'text-white/80' : 'text-tinta-suave')}>{INICIAL_DIA[diaSemana(d)]}</span>
-              <span className="font-display text-2xl leading-tight font-semibold tabular">{d.getDate()}</span>
+              <span className="font-display text-xl leading-tight font-bold tabular tracking-tight">{d.getDate()}</span>
               <span className="flex h-1.5 gap-0.5" aria-hidden>
                 {Array.from({ length: Math.min(n, 4) }, (_, i) => (
-                  <span key={i} className={clsx('size-1.5 rounded-full', elegido ? 'bg-pelota' : 'bg-cancha')} />
+                  <span key={i} className={clsx('size-1.5 rounded-full', elegido ? 'bg-pelota text-noche' : 'bg-primario')} />
                 ))}
               </span>
             </button>
@@ -94,7 +94,7 @@ export function AgendaPage() {
         })}
       </div>
 
-      <h2 className="mt-6 mb-3 font-display text-xl font-semibold first-letter:uppercase">
+      <h2 className="mt-6 mb-3 font-display text-[17px] font-bold first-letter:uppercase tracking-tight">
         {fechaLarga(new Date(dia + 'T12:00'))}
       </h2>
 
