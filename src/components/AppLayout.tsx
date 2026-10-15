@@ -1,13 +1,13 @@
 import { NavLink, Outlet } from 'react-router'
 import clsx from 'clsx'
-import { CalendarDays, CircleUserRound, Sun, Trophy, Users } from 'lucide-react'
+import { CalendarDays, Sun, Trophy, Users, Wallet } from 'lucide-react'
 
 const PESTANAS = [
   { a: '/', texto: 'Hoy', Icono: Sun },
   { a: '/agenda', texto: 'Agenda', Icono: CalendarDays },
   { a: '/partidos', texto: 'Partidos', Icono: Trophy },
   { a: '/alumnos', texto: 'Alumnos', Icono: Users },
-  { a: '/perfil', texto: 'Perfil', Icono: CircleUserRound },
+  { a: '/pagos', texto: 'Pagos', Icono: Wallet },
 ]
 
 export function AppLayout() {

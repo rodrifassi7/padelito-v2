@@ -1,9 +1,11 @@
 import clsx from 'clsx'
-import { ChevronRight, MapPin, Repeat } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronRight, MapPin, NotebookPen, Repeat } from 'lucide-react'
 import { useMarcarAsistencia } from '../../api/agenda'
 import { ASISTENCIA } from '../../lib/etiquetas'
-import { hora, horaFin, hoyIso } from '../../lib/fechas'
+import { hora, horaFin, hoyIso, minutos } from '../../lib/fechas'
 import type { Asistencia, EstadoAsistencia, Sesion } from '../../lib/tipos'
+import { NotaHoja } from '../seguimiento/NotaHoja'
 
 const ESTILO_ACTIVO: Record<Exclude<EstadoAsistencia, 'pendiente'>, string> = {
   presente: 'bg-pelota text-tinta border-pelota-oscura',
@@ -44,6 +46,14 @@ function ControlAsistencia({ sesion, asistencia }: { sesion: Sesion; asistencia:
 
 export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () => void }) {
   const cancelada = sesion.estado === 'cancelada'
+  const [notas, setNotas] = useState(false)
+  // Los que vinieron primero; si todavía no se marcó nada, todos.
+  const vinieron = sesion.asistencias.filter((a) => a.estado === 'presente')
+  const paraNotas = (vinieron.length ? vinieron : sesion.asistencias.filter((a) => a.estado === 'pendiente')).map((a) => a.alumno)
+  const ahora = new Date()
+  const empezo =
+    sesion.fecha < hoyIso() || (sesion.fecha === hoyIso() && minutos(sesion.hora) <= ahora.getHours() * 60 + ahora.getMinutes())
+  const puedeAnotar = !cancelada && empezo && paraNotas.length > 0
 
   return (
     <article className={clsx('rounded-2xl border border-linea bg-white', cancelada && 'opacity-60')}>
@@ -95,6 +105,19 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
             </li>
           ))}
         </ul>
+      )}
+
+      {puedeAnotar && (
+        <>
+          <button
+            type="button"
+            onClick={() => setNotas(true)}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-b-2xl border-t border-linea text-[15px] font-semibold text-cancha hover:bg-cancha-clara/50"
+          >
+            <NotebookPen className="size-4" aria-hidden /> Notas de la clase
+          </button>
+          <NotaHoja abierta={notas} onCerrar={() => setNotas(false)} alumnos={paraNotas} sesionId={sesion.id} fecha={sesion.fecha} />
+        </>
       )}
     </article>
   )

@@ -1,4 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router'
+import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { useGuardarProfe, useProfe } from '../api/profe'
 import { Boton, Campo, Cargando, Titulo } from '../components/ui'
@@ -7,16 +9,16 @@ import { mensajeError, supabase } from '../lib/supabase'
 export function PerfilPage() {
   const { data: profe, isPending } = useProfe()
   const guardar = useGuardarProfe()
-  const [form, setForm] = useState({ nombre: '', telefono: '', club: '' })
+  const [form, setForm] = useState({ nombre: '', telefono: '', club: '', alias: '' })
 
   useEffect(() => {
-    if (profe) setForm({ nombre: profe.nombre, telefono: profe.telefono ?? '', club: profe.club ?? '' })
+    if (profe) setForm({ nombre: profe.nombre, telefono: profe.telefono ?? '', club: profe.club ?? '', alias: profe.alias_pago ?? '' })
   }, [profe])
 
   function enviar(e: FormEvent) {
     e.preventDefault()
     guardar.mutate(
-      { nombre: form.nombre.trim(), telefono: form.telefono.trim() || null, club: form.club.trim() || null },
+      { nombre: form.nombre.trim(), telefono: form.telefono.trim() || null, club: form.club.trim() || null, alias_pago: form.alias.trim() || null },
       { onSuccess: () => toast.success('Perfil guardado'), onError: (err) => toast.error(mensajeError(err)) },
     )
   }
@@ -25,6 +27,11 @@ export function PerfilPage() {
 
   return (
     <div className="px-5">
+      <div className="pt-3">
+        <Link to="/" className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 font-medium text-cancha">
+          <ChevronLeft className="size-5" aria-hidden /> Hoy
+        </Link>
+      </div>
       <Titulo>Perfil</Titulo>
       <p className="-mt-2 mb-6 text-tinta-suave">{profe?.email}</p>
       <form onSubmit={enviar} className="flex flex-col gap-4">
@@ -36,6 +43,9 @@ export function PerfilPage() {
         </Campo>
         <Campo etiqueta="Teléfono">
           {(id, c) => <input id={id} className={c} type="tel" inputMode="tel" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />}
+        </Campo>
+        <Campo etiqueta="Alias o CBU para transferencias" ayuda="Va en los recordatorios de pago que mandás por WhatsApp.">
+          {(id, c) => <input id={id} className={c} autoCapitalize="off" value={form.alias} onChange={(e) => setForm({ ...form, alias: e.target.value })} />}
         </Campo>
         <Boton type="submit" cargando={guardar.isPending} className="mt-2">
           Guardar perfil

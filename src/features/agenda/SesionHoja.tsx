@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { MapPin, Repeat, UserPlus, X } from 'lucide-react'
+import { MapPin, NotebookPen, Repeat, UserPlus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   useBorrarSesion,
@@ -14,6 +14,7 @@ import { deIso, fechaLarga, hora, horaFin, NOMBRE_DIA, diaSemana } from '../../l
 import { mensajeError } from '../../lib/supabase'
 import type { Sesion } from '../../lib/tipos'
 import { ElegirAlumnos } from '../alumnos/ElegirAlumnos'
+import { NotaHoja } from '../seguimiento/NotaHoja'
 
 /** Botón que pide un segundo toque antes de hacer algo que no se puede deshacer. */
 function BotonConfirmar({ children, confirmar, onConfirmar, cargando }: {
@@ -35,7 +36,11 @@ function BotonConfirmar({ children, confirmar, onConfirmar, cargando }: {
   )
 }
 
-type Modo = { tipo: 'ver' } | { tipo: 'sumar' } | { tipo: 'quitar'; alumnoId: string; nombre: string }
+type Modo =
+  | { tipo: 'ver' }
+  | { tipo: 'sumar' }
+  | { tipo: 'quitar'; alumnoId: string; nombre: string }
+  | { tipo: 'nota'; alumnoId: string }
 
 interface Props {
   sesion: Sesion | null
@@ -108,6 +113,19 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
     )
   }
 
+  // ─── Nota para un alumno ───
+  if (modo.tipo === 'nota') {
+    return (
+      <NotaHoja
+        abierta
+        onCerrar={() => setModo({ tipo: 'ver' })}
+        alumnos={sesion.asistencias.filter((a) => a.alumno_id === modo.alumnoId).map((a) => a.alumno)}
+        sesionId={sesion.id}
+        fecha={sesion.fecha}
+      />
+    )
+  }
+
   // ─── Quitar alumno ───
   if (modo.tipo === 'quitar') {
     return (
@@ -161,6 +179,15 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
             <Link to={`/alumnos/${a.alumno_id}`} onClick={onCerrar} className="min-w-0 flex-1 truncate font-medium hover:text-cancha">
               {a.alumno.nombre}
             </Link>
+            {!cancelada && (
+              <button
+                onClick={() => setModo({ tipo: 'nota', alumnoId: a.alumno_id })}
+                className="grid size-9 place-items-center rounded-full text-cancha hover:bg-cancha-clara"
+                aria-label={`Nota para ${a.alumno.nombre}`}
+              >
+                <NotebookPen className="size-4" />
+              </button>
+            )}
             {!cancelada && (
               <button
                 onClick={() => setModo({ tipo: 'quitar', alumnoId: a.alumno_id, nombre: a.alumno.nombre })}

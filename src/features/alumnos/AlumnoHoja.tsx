@@ -27,7 +27,7 @@ export function AlumnoHoja({ abierta, onCerrar, alumno, onGuardado }: Props) {
   useEffect(() => {
     if (!abierta) return
     if (alumno) {
-      const { id: _id, created_at: _c, ...resto } = alumno
+      const { id: _id, created_at: _c, token_publico: _t, ...resto } = alumno
       setF(resto)
       setTarifa(alumno.tarifa != null ? String(alumno.tarifa) : '')
     } else {

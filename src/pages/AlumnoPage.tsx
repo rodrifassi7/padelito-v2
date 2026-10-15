@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { differenceInYears, subWeeks } from 'date-fns'
 import clsx from 'clsx'
 import { ChevronLeft, MessageCircle, Pencil, Repeat } from 'lucide-react'
@@ -9,6 +9,11 @@ import { AlumnoHoja } from '../features/alumnos/AlumnoHoja'
 import { usePuntosDeAlumno } from '../api/partidos'
 import { estadisticas } from '../features/partido/estadisticas'
 import { ResumenEstadisticas } from '../features/partido/ResumenEstadisticas'
+import { Focos } from '../features/seguimiento/Focos'
+import { Evaluaciones } from '../features/seguimiento/Evaluacion'
+import { Notas } from '../features/seguimiento/Notas'
+import { PagosAlumno } from '../features/pagos/PagosAlumno'
+import { LinkAlumno } from '../features/alumnos/LinkAlumno'
 import { ASISTENCIA, linkWhatsapp, MANOS, MODALIDADES, pesos, POSICIONES, textoNivel } from '../lib/etiquetas'
 import { deIso, fechaCorta, hora, hoyIso, iso, NOMBRE_DIA } from '../lib/fechas'
 import type { EstadoAsistencia } from '../lib/tipos'
@@ -109,10 +114,19 @@ function EnPartidos({ alumnoId }: { alumnoId: string }) {
   )
 }
 
+type Pestana = 'progreso' | 'clases' | 'pagos' | 'ficha'
+const PESTANAS: { valor: Pestana; texto: string }[] = [
+  { valor: 'progreso', texto: 'Progreso' },
+  { valor: 'clases', texto: 'Clases' },
+  { valor: 'pagos', texto: 'Pagos' },
+  { valor: 'ficha', texto: 'Ficha' },
+]
+
 export function AlumnoPage() {
   const { id = '' } = useParams()
   const { data: a, isPending, isError, refetch } = useAlumno(id)
   const [editar, setEditar] = useState(false)
+  const [params, setParams] = useSearchParams()
 
   if (isPending) return <Cargando pantalla />
   if (isError || !a) return <ErrorCarga onReintentar={() => refetch()} />
@@ -126,6 +140,9 @@ export function AlumnoPage() {
       `${MODALIDADES.find((m) => m.valor === a.modalidad_pago)?.texto}${a.tarifa ? `, ${pesos(a.tarifa)}` : ''}`,
     ],
   ].filter((d): d is [string, string] => Boolean(d[1]))
+
+  const tab = (params.get('tab') as Pestana) ?? 'progreso'
+  const irA = (t: Pestana) => setParams(t === 'progreso' ? {} : { tab: t }, { replace: true })
 
   return (
     <div className="px-4">
@@ -149,48 +166,93 @@ export function AlumnoPage() {
         </div>
       </header>
 
-      {a.telefono && (
-        <Boton
-          variante="secundario"
-          ancho
-          className="mt-5"
-          onClick={() => window.open(linkWhatsapp(a.telefono!), '_blank', 'noopener')}
-        >
-          <MessageCircle className="size-5" aria-hidden /> Escribirle por WhatsApp
-        </Boton>
-      )}
+      <div className="mt-5 grid grid-cols-2 gap-2">
+        {a.telefono ? (
+          <a href={linkWhatsapp(a.telefono)} target="_blank" rel="noopener" className="flex h-12 items-center justify-center gap-2 rounded-xl border border-linea bg-white font-semibold">
+            <MessageCircle className="size-5" aria-hidden /> WhatsApp
+          </a>
+        ) : (
+          <button onClick={() => setEditar(true)} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-dashed border-linea font-medium text-tinta-suave">
+            Cargar teléfono
+          </button>
+        )}
+        <LinkAlumno alumno={a} />
+      </div>
 
       {a.objetivo && (
-        <div className="mt-5 rounded-2xl bg-cancha px-4 py-3.5 text-white">
+        <div className="mt-4 rounded-2xl bg-cancha px-4 py-3.5 text-white">
           <p className="text-sm text-white/75">Quiere lograr</p>
           <p className="text-lg leading-snug">{a.objetivo}</p>
         </div>
       )}
 
-      <Seccion titulo="Clases fijas">
-        <ClasesFijas alumnoId={a.id} />
-      </Seccion>
-
-      <Seccion titulo="Asistencia">
-        <Asistencia alumnoId={a.id} />
-      </Seccion>
-
-      <Seccion titulo="En partidos">
-        <EnPartidos alumnoId={a.id} />
-      </Seccion>
-
-      <Seccion titulo="Ficha">
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-linea bg-linea">
-          {datos.map(([k, v]) => (
-            <div key={k} className="bg-white px-4 py-3">
-              <dt className="text-sm text-tinta-suave">{k}</dt>
-              <dd className="font-medium">{v}</dd>
-            </div>
+      <nav className="sticky top-0 z-20 -mx-4 mt-5 bg-fondo/95 px-4 py-2 backdrop-blur" aria-label="Secciones del alumno">
+        <div className="grid grid-cols-4 gap-1 rounded-xl bg-linea/70 p-1" role="tablist">
+          {PESTANAS.map((t) => (
+            <button
+              key={t.valor}
+              role="tab"
+              aria-selected={tab === t.valor}
+              onClick={() => irA(t.valor)}
+              className={clsx('h-9 rounded-lg text-[15px] font-semibold transition-colors', tab === t.valor ? 'bg-white text-tinta shadow-sm' : 'text-tinta-suave')}
+            >
+              {t.texto}
+            </button>
           ))}
-          {datos.length % 2 === 1 && <div className="bg-white" />}
-        </dl>
-        {a.notas && <p className="mt-3 rounded-2xl border border-linea bg-white px-4 py-3 whitespace-pre-line">{a.notas}</p>}
-      </Seccion>
+        </div>
+      </nav>
+
+      {tab === 'progreso' && (
+        <>
+          <Seccion titulo="Focos de trabajo">
+            <Focos alumnoId={a.id} />
+          </Seccion>
+          <Seccion titulo="Evaluación">
+            <Evaluaciones alumnoId={a.id} />
+          </Seccion>
+          <Seccion titulo="Notas de clase">
+            <Notas alumno={a} />
+          </Seccion>
+          <Seccion titulo="En partidos">
+            <EnPartidos alumnoId={a.id} />
+          </Seccion>
+        </>
+      )}
+
+      {tab === 'clases' && (
+        <>
+          <Seccion titulo="Clases fijas">
+            <ClasesFijas alumnoId={a.id} />
+          </Seccion>
+          <Seccion titulo="Asistencia">
+            <Asistencia alumnoId={a.id} />
+          </Seccion>
+        </>
+      )}
+
+      {tab === 'pagos' && (
+        <Seccion titulo="Pagos">
+          <PagosAlumno alumno={a} />
+        </Seccion>
+      )}
+
+      {tab === 'ficha' && (
+        <Seccion titulo="Ficha">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-linea bg-linea">
+            {datos.map(([k, v]) => (
+              <div key={k} className="bg-white px-4 py-3">
+                <dt className="text-sm text-tinta-suave">{k}</dt>
+                <dd className="font-medium">{v}</dd>
+              </div>
+            ))}
+            {datos.length % 2 === 1 && <div className="bg-white" />}
+          </dl>
+          {a.notas && <p className="mt-3 rounded-2xl border border-linea bg-white px-4 py-3 whitespace-pre-line">{a.notas}</p>}
+          <Boton variante="secundario" ancho className="mt-4" onClick={() => setEditar(true)}>
+            <Pencil className="size-4" aria-hidden /> Editar ficha
+          </Boton>
+        </Seccion>
+      )}
 
       <AlumnoHoja abierta={editar} onCerrar={() => setEditar(false)} alumno={a} />
     </div>

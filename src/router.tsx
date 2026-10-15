@@ -15,6 +15,8 @@ import { PartidosPage } from './pages/PartidosPage'
 import { NuevoPartidoPage } from './pages/NuevoPartidoPage'
 import { EnJuegoPage } from './pages/EnJuegoPage'
 import { PartidoPage } from './pages/PartidoPage'
+import { PagosPage } from './pages/PagosPage'
+import { PerfilPublicoPage } from './pages/PerfilPublicoPage'
 
 function SoloConSesion() {
   const { session, cargando } = useAuth()
@@ -53,6 +55,7 @@ export const router = createBrowserRouter([
           { path: '/partidos/:id', element: <PartidoPage /> },
           { path: '/alumnos', element: <AlumnosPage /> },
           { path: '/alumnos/:id', element: <AlumnoPage /> },
+          { path: '/pagos', element: <PagosPage /> },
           { path: '/perfil', element: <PerfilPage /> },
         ],
       },
@@ -60,5 +63,7 @@ export const router = createBrowserRouter([
       { path: '/partidos/en-juego', element: <EnJuegoPage /> },
     ],
   },
+  // Link público del alumno: sin cuenta.
+  { path: '/a/:token', element: configFaltante ? <FaltaConfigPage /> : <PerfilPublicoPage /> },
   { path: '*', element: <Navigate to="/" replace /> },
 ])

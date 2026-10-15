@@ -203,3 +203,15 @@ export function useBorrarSesion() {
     onSuccess: () => refrescar(qc),
   })
 }
+
+/** Si el profe ya armó alguna clase fija (para la bienvenida). */
+export function useHayClasesFijas() {
+  return useQuery({
+    queryKey: ['clases', 'hay'],
+    queryFn: async () => {
+      const { count, error } = await supabase.from('clases').select('id', { count: 'exact', head: true })
+      if (error) throw error
+      return (count ?? 0) > 0
+    },
+  })
+}

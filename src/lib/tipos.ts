@@ -13,6 +13,7 @@ export interface Profe {
   nombre: string
   telefono: string | null
   club: string | null
+  alias_pago: string | null
 }
 
 export interface Alumno {
@@ -29,10 +30,11 @@ export interface Alumno {
   modalidad_pago: ModalidadPago
   tarifa: number | null
   activo: boolean
+  token_publico: string
   created_at: string
 }
 
-export type AlumnoForm = Omit<Alumno, 'id' | 'created_at'>
+export type AlumnoForm = Omit<Alumno, 'id' | 'created_at' | 'token_publico'>
 
 export interface Clase {
   id: string
@@ -65,4 +67,57 @@ export interface Sesion {
   estado: EstadoSesion
   nota: string | null
   asistencias: Asistencia[]
+}
+
+// ─── Seguimiento ────────────────────────────────────────────────────────────
+
+export type Area = 'tecnica' | 'tactica' | 'fisica' | 'mental'
+export type TipoNota = 'a_mejorar' | 'avance' | 'error'
+export type EstadoFoco = 'pendiente' | 'trabajando' | 'logrado'
+
+export interface Nota {
+  id: string
+  alumno_id: string
+  sesion_id: string | null
+  fecha: string
+  area: Area
+  golpe: string | null
+  tipo: TipoNota
+  texto: string
+  created_at: string
+}
+
+export interface Foco {
+  id: string
+  alumno_id: string
+  area: Area
+  golpe: string | null
+  titulo: string
+  detalle: string | null
+  estado: EstadoFoco
+  logrado_en: string | null
+  created_at: string
+}
+
+export interface Evaluacion {
+  id: string
+  alumno_id: string
+  fecha: string
+  comentario: string | null
+  items: { habilidad: string; puntaje: number }[]
+}
+
+// ─── Pagos ──────────────────────────────────────────────────────────────────
+
+export type MedioPago = 'efectivo' | 'transferencia' | 'otro'
+
+export interface Pago {
+  id: string
+  alumno_id: string
+  fecha: string
+  monto: number
+  medio: MedioPago
+  periodo: string | null
+  clases: number | null
+  nota: string | null
 }
