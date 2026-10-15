@@ -49,6 +49,42 @@
   color: var(--c-texto);
 }
 
+/*
+ * Modo noche: la misma cancha con las luces prendidas. Se activa con
+ * data-tema="noche" en <html> (ver src/lib/tema.ts). El amarillo pelota
+ * sigue siendo la acción, también dentro de las hojas.
+ */
+:root[data-tema='noche'] {
+  --c-fondo: #0b1a4a;
+  --c-superficie: rgb(255 255 255 / 0.08);
+  --c-superficie-fuerte: rgb(255 255 255 / 0.15);
+  --c-borde: rgb(255 255 255 / 0.2);
+  --c-texto-suave: rgb(255 255 255 / 0.76);
+  --c-acento-suave: rgb(255 255 255 / 0.12);
+  --c-falta-clara: rgb(255 138 115 / 0.18);
+  --c-brillo: rgb(255 255 255 / 0.22);
+  color-scheme: dark;
+}
+
+[data-tema='noche'] .claro {
+  --c-fondo: #10215a;
+  --c-superficie: #182c6c;
+  --c-superficie-fuerte: #20367c;
+  --c-borde: #2e4589;
+  --c-texto: #f1f4ff;
+  --c-texto-suave: #aab7de;
+  --c-primario: #d9f24a;
+  --c-sobre-primario: #0b1a4a;
+  --c-acento: #d9f24a;
+  --c-acento-suave: rgb(217 242 74 / 0.14);
+  --c-falta: #ffa695;
+  --c-falta-fondo: #ff8a73;
+  --c-sobre-falta: #3a0f08;
+  --c-falta-clara: rgb(255 138 115 / 0.16);
+  --c-aviso: #ffd98a;
+  --c-aviso-clara: rgb(255 209 102 / 0.16);
+}
+
 @theme inline {
   --color-fondo: var(--c-fondo);
   --color-superficie: var(--c-superficie);
@@ -120,6 +156,36 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Fondo de cancha: de noche las líneas bajan y se prenden las luces. */
+.luz-cancha {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+[data-tema='noche'] .luz-cancha {
+  opacity: 1;
+}
+[data-tema='noche'] .lineas-cancha {
+  opacity: 0.6;
+}
+[data-tema='noche'] .pelota-fondo {
+  box-shadow: 0 0 60px 6px rgb(217 242 74 / 0.28);
+}
+
+/* Fundido de colores al cambiar de tema (cuando no hay View Transitions). */
+html.cambiando-tema *,
+html.cambiando-tema *::before,
+html.cambiando-tema *::after {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow;
+  transition-duration: 0.5s;
+}
+
+/* Con View Transitions la noche se expande desde la pelota (ver tema.ts). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -142,4 +208,26 @@
 
 @utility animate-subir {
   animation: subir 180ms ease-out;
+}
+
+/* El globo de la pelota en el switch de modo noche. */
+@keyframes globo-noche {
+  0% { translate: 0 0; rotate: 0deg; scale: 1; }
+  45% { translate: 20px -20px; rotate: 110deg; scale: 1.12; }
+  80% { translate: 44px 0; rotate: 200deg; scale: 1; }
+  90% { translate: 44px -4px; rotate: 212deg; }
+  100% { translate: 44px 0; rotate: 220deg; }
+}
+@keyframes globo-dia {
+  0% { translate: 44px 0; rotate: 220deg; scale: 1; }
+  45% { translate: 24px -20px; rotate: 110deg; scale: 1.12; }
+  80% { translate: 0 0; rotate: 20deg; scale: 1; }
+  90% { translate: 0 -4px; rotate: 8deg; }
+  100% { translate: 0 0; rotate: 0deg; }
+}
+@utility animate-globo-noche {
+  animation: globo-noche 560ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+@utility animate-globo-dia {
+  animation: globo-dia 560ms cubic-bezier(0.3, 0.7, 0.4, 1);
 }

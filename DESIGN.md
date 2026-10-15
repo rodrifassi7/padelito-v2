@@ -26,6 +26,13 @@ Reglas:
 - Un solo color de acción por pantalla: amarillo sobre azul, azul dentro de las hojas.
 - La pelota de fondo va solo en Hoy, acceso y link público. En las demás pantallas taparía números.
 
+## Modo noche
+
+- Misma cancha con las luces prendidas: fondo `noche #0B1A4A`, vidrio más tenue, líneas más bajas, dos luces suaves arriba y la pelota de fondo con brillo.
+- Se activa con `data-tema="noche"` en `<html>` (`src/lib/tema.ts`). Las variables se redefinen en `:root[data-tema='noche']` y `[data-tema='noche'] .claro`: no hace falta tocar componentes si usan los tokens.
+- Dentro de las hojas, de noche, la acción vuelve a ser amarillo pelota con `text-noche`.
+- El cambio se hace con `SwitchPelota` (Perfil → Apariencia): la pelota cruza la red de un globo y la noche se expande en círculo desde donde cae (View Transitions; si no hay, fundido corto). Preferencia: `azul` (por defecto), `noche` o `auto`, guardada en el dispositivo. `index.html` la aplica antes de pintar.
+
 ## Tipografía
 
 - **Unbounded** (`font-display`, peso 700, `tracking-tight`): títulos, horarios y números grandes. Es ancha: títulos de pantalla de 30 px, horarios de 23 px.

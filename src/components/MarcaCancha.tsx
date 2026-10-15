@@ -3,27 +3,30 @@ import type { ReactNode } from 'react'
 /**
  * El fondo de toda la app: la cancha vista desde arriba (líneas blancas
  * sobre el azul) y la pelota, que queda detrás del vidrio de las tarjetas.
- * Va fijo, detrás del contenido.
+ * Va fijo, detrás del contenido. De noche se prenden las luces (index.css).
  */
 export function FondoCancha({ pelota = 'medio' }: { pelota?: 'medio' | 'abajo' | 'ninguna' }) {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
       <div className="relative mx-auto h-full max-w-lg">
         <svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full">
-          <g fill="none" stroke="white" strokeOpacity=".2" strokeWidth="3">
+          <g className="lineas-cancha" fill="none" stroke="white" strokeOpacity=".2" strokeWidth="3">
             <rect x="28" y="40" width="334" height="764" />
             <line x1="28" y1="156" x2="362" y2="156" />
             <line x1="28" y1="688" x2="362" y2="688" />
             <line x1="195" y1="156" x2="195" y2="688" />
           </g>
-          <line x1="28" y1="422" x2="362" y2="422" stroke="white" strokeOpacity=".4" strokeWidth="5" />
+          <line className="lineas-cancha" x1="28" y1="422" x2="362" y2="422" stroke="white" strokeOpacity=".4" strokeWidth="5" />
         </svg>
+        {/* Luces de la cancha: solo se ven en modo noche */}
+        <div className="luz-cancha absolute -top-40 -left-32 size-96 rounded-full bg-[radial-gradient(circle,rgb(255_246_200/0.16),transparent_65%)]" />
+        <div className="luz-cancha absolute -top-40 -right-32 size-96 rounded-full bg-[radial-gradient(circle,rgb(255_246_200/0.12),transparent_65%)]" />
         {pelota !== 'ninguna' && (
           <div
             className={
               pelota === 'medio'
-                ? 'absolute top-24 -right-16 size-36 rounded-full bg-pelota'
-                : 'absolute -bottom-12 -left-12 size-40 rounded-full bg-pelota'
+                ? 'pelota-fondo absolute top-24 -right-16 size-36 rounded-full bg-pelota'
+                : 'pelota-fondo absolute -bottom-12 -left-12 size-40 rounded-full bg-pelota'
             }
           />
         )}

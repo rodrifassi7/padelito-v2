@@ -3,12 +3,15 @@ import { Link, useNavigate, useSearchParams } from 'react-router'
 import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { useGuardarProfe, useProfe } from '../api/profe'
-import { Boton, Campo, Cargando, Titulo } from '../components/ui'
+import { SwitchPelota } from '../components/SwitchPelota'
+import { Boton, Campo, Cargando, Seccion, Titulo } from '../components/ui'
+import { useTema } from '../lib/tema'
 import { mensajeError, supabase } from '../lib/supabase'
 
 export function PerfilPage() {
   const { data: profe, isPending } = useProfe()
   const guardar = useGuardarProfe()
+  const tema = useTema()
   const [params] = useSearchParams()
   const navegar = useNavigate()
   const desdeBienvenida = params.get('desde') === 'bienvenida'
@@ -60,6 +63,29 @@ export function PerfilPage() {
           Guardar perfil
         </Boton>
       </form>
+      <Seccion titulo="Apariencia">
+        <div className="vidrio rounded-2xl border border-linea bg-superficie p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold">Modo noche</p>
+              <p className="text-[15px] text-tinta-suave">
+                {tema.tema === 'noche' ? 'Luces prendidas. Ideal para las clases de la noche.' : 'Cancha azul, la que mejor se lee al sol.'}
+              </p>
+            </div>
+            <SwitchPelota noche={tema.tema === 'noche'} onCambiar={(noche, origen) => tema.cambiar(noche ? 'noche' : 'azul', origen)} />
+          </div>
+          <label className="mt-3 flex min-h-10 cursor-pointer items-center gap-3 border-t border-linea pt-3 text-[15px]">
+            <input
+              type="checkbox"
+              className="size-5 accent-[var(--c-primario)]"
+              checked={tema.preferencia === 'auto'}
+              onChange={(e) => tema.cambiar(e.target.checked ? 'auto' : tema.tema)}
+            />
+            Seguir el modo del celular
+          </label>
+        </div>
+        <p className="mt-2 text-[13px] text-tinta-suave">Se guarda en este celular.</p>
+      </Seccion>
       <Boton variante="secundario" ancho className="mt-10" onClick={() => supabase.auth.signOut()}>
         Cerrar sesión
       </Boton>
