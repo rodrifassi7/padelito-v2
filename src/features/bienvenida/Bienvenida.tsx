@@ -62,7 +62,7 @@ export function Bienvenida() {
       <ol>
         {pasos.map((p) => (
           <li key={p.a}>
-            <Link to={p.a} className="flex items-center gap-3 py-2.5">
+            <Link to={`${p.a}?desde=bienvenida`} className="flex items-center gap-3 py-2.5">
               <span
                 className={clsx(
                   'grid size-7 shrink-0 place-items-center rounded-full border-2',

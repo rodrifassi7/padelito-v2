@@ -28,9 +28,15 @@ export function useAgenda(desde: string, hasta: string) {
   })
 }
 
+/**
+ * Vuelve a pedir todas las agendas en caché (también las que no están en
+ * pantalla, como Hoy cuando se crea la clase desde Agenda) y espera, así al
+ * cambiar de pestaña ya se ve la clase nueva.
+ */
 function refrescar(qc: QueryClient) {
-  qc.invalidateQueries({ queryKey: ['agenda'] })
   qc.invalidateQueries({ queryKey: ['alumno'] })
+  qc.invalidateQueries({ queryKey: ['clases'] })
+  return qc.invalidateQueries({ queryKey: ['agenda'], refetchType: 'all' })
 }
 
 /** Cambia una sesión en todas las vistas de agenda en caché. */

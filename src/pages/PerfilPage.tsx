@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { useGuardarProfe, useProfe } from '../api/profe'
@@ -9,6 +9,9 @@ import { mensajeError, supabase } from '../lib/supabase'
 export function PerfilPage() {
   const { data: profe, isPending } = useProfe()
   const guardar = useGuardarProfe()
+  const [params] = useSearchParams()
+  const navegar = useNavigate()
+  const desdeBienvenida = params.get('desde') === 'bienvenida'
   const [form, setForm] = useState({ nombre: '', telefono: '', club: '', alias: '' })
 
   useEffect(() => {
@@ -19,7 +22,13 @@ export function PerfilPage() {
     e.preventDefault()
     guardar.mutate(
       { nombre: form.nombre.trim(), telefono: form.telefono.trim() || null, club: form.club.trim() || null, alias_pago: form.alias.trim() || null },
-      { onSuccess: () => toast.success('Perfil guardado'), onError: (err) => toast.error(mensajeError(err)) },
+      {
+        onSuccess: () => {
+          toast.success('Perfil guardado')
+          if (desdeBienvenida) navegar('/', { replace: true })
+        },
+        onError: (err) => toast.error(mensajeError(err)),
+      },
     )
   }
 

@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { useCrearClase } from '../../api/agenda'
 import { useProfe } from '../../api/profe'
 import { Boton, Campo, Hoja, Opciones } from '../../components/ui'
-import { deIso, diaSemana, NOMBRE_DIA } from '../../lib/fechas'
+import { deIso, diaSemana, fechaLarga, NOMBRE_DIA } from '../../lib/fechas'
 import { mensajeError } from '../../lib/supabase'
 import { ElegirAlumnos } from '../alumnos/ElegirAlumnos'
 
@@ -22,9 +22,11 @@ interface Props {
   abierta: boolean
   onCerrar: () => void
   fecha: string
+  /** Se llama después de crear la clase (además de cerrar la hoja). */
+  onCreada?: () => void
 }
 
-export function NuevaClaseHoja({ abierta, onCerrar, fecha: fechaInicial }: Props) {
+export function NuevaClaseHoja({ abierta, onCerrar, fecha: fechaInicial, onCreada }: Props) {
   const crear = useCrearClase()
   const { data: profe } = useProfe()
   const [fecha, setFecha] = useState(fechaInicial)
@@ -49,8 +51,11 @@ export function NuevaClaseHoja({ abierta, onCerrar, fecha: fechaInicial }: Props
       { fecha, hora, duracion_min: Number(duracion), lugar: lugar.trim() || null, alumnoIds: alumnos, repetir },
       {
         onSuccess: () => {
-          toast.success(repetir ? 'Clase fija creada' : 'Clase creada')
+          // Decir dónde quedó, para que se encuentre en Hoy o en la Agenda.
+          const cuando = repetir ? `todos los ${dia} a las ${hora}` : `${fechaLarga(deIso(fecha))}, ${hora}`
+          toast.success(repetir ? `Clase fija: ${cuando}` : `Clase creada: ${cuando}`)
           onCerrar()
+          onCreada?.()
         },
         onError: (err) => toast.error(mensajeError(err)),
       },

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
 import { addWeeks } from 'date-fns'
 import clsx from 'clsx'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
@@ -15,7 +16,10 @@ export function AgendaPage() {
   const [dia, setDia] = useState(() => iso(new Date()))
   const { data: sesiones, isPending, isError, refetch } = useAgenda(desde, hasta)
   const [abierta, setAbierta] = useState<string | null>(null)
-  const [nueva, setNueva] = useState(false)
+  const [params] = useSearchParams()
+  const navegar = useNavigate()
+  const desdeBienvenida = params.get('desde') === 'bienvenida'
+  const [nueva, setNueva] = useState(desdeBienvenida)
 
   const dias = diasDeSemana(lunes)
   const porDia = useMemo(() => {
@@ -104,7 +108,12 @@ export function AgendaPage() {
       </div>
 
 
-      <NuevaClaseHoja abierta={nueva} onCerrar={() => setNueva(false)} fecha={dia} />
+      <NuevaClaseHoja
+        abierta={nueva}
+        onCerrar={() => setNueva(false)}
+        fecha={dia}
+        onCreada={desdeBienvenida ? () => navegar('/', { replace: true }) : undefined}
+      />
       <SesionHoja sesion={sesionAbierta} onCerrar={() => setAbierta(null)} />
     </div>
   )

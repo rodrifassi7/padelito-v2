@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { ChevronRight, Plus, Search } from 'lucide-react'
 import { useAlumnos } from '../api/alumnos'
 import { Avatar, Boton, Cargando, ErrorCarga, Titulo, Vacio } from '../components/ui'
@@ -12,7 +12,9 @@ export function AlumnosPage() {
   const { data: alumnos, isPending, isError, refetch } = useAlumnos()
   const [busqueda, setBusqueda] = useState('')
   const [verInactivos, setVerInactivos] = useState(false)
-  const [nuevo, setNuevo] = useState(false)
+  const [params] = useSearchParams()
+  const desdeBienvenida = params.get('desde') === 'bienvenida'
+  const [nuevo, setNuevo] = useState(desdeBienvenida)
   const navegar = useNavigate()
 
   const inactivos = (alumnos ?? []).filter((a) => !a.activo).length
@@ -87,7 +89,7 @@ export function AlumnosPage() {
       )}
 
 
-      <AlumnoHoja abierta={nuevo} onCerrar={() => setNuevo(false)} onGuardado={(a) => navegar(`/alumnos/${a.id}`)} />
+      <AlumnoHoja abierta={nuevo} onCerrar={() => setNuevo(false)} onGuardado={(a) => navegar(desdeBienvenida ? '/' : `/alumnos/${a.id}`, { replace: desdeBienvenida })} />
     </div>
   )
 }
