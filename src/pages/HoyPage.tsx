@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import { useAgenda } from '../api/agenda'
 import { useProfe } from '../api/profe'
 import { MarcaCancha } from '../components/MarcaCancha'
+import { SwitchPelota } from '../components/SwitchPelota'
 import { Boton, Cargando, ErrorCarga, Vacio } from '../components/ui'
 import { NuevaClaseHoja } from '../features/agenda/NuevaClaseHoja'
 import { SesionCard } from '../features/agenda/SesionCard'
@@ -11,6 +12,7 @@ import { SesionHoja } from '../features/agenda/SesionHoja'
 import { Bienvenida } from '../features/bienvenida/Bienvenida'
 import { iniciales } from '../lib/etiquetas'
 import { fechaLarga, hora, hoyIso, minutos } from '../lib/fechas'
+import { useTema } from '../lib/tema'
 
 function resumen(clases: number, alumnos: number) {
   if (clases === 0) return 'Sin clases hoy'
@@ -25,6 +27,7 @@ export function HoyPage() {
   const { data: profe } = useProfe()
   const [abierta, setAbierta] = useState<string | null>(null)
   const [nueva, setNueva] = useState(false)
+  const tema = useTema()
 
   const activas = (sesiones ?? []).filter((s) => s.estado !== 'cancelada')
   const alumnos = new Set(activas.flatMap((s) => s.asistencias.map((a) => a.alumno_id))).size
@@ -38,12 +41,14 @@ export function HoyPage() {
       <MarcaCancha>
         <div className="flex items-center justify-between gap-3">
           <span className="font-display text-xl font-bold tracking-tight">padelito</span>
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 items-center gap-2">
+            <SwitchPelota noche={tema.tema === 'noche'} onCambiar={(noche, origen) => tema.cambiar(noche ? 'noche' : 'azul', origen)} />
             <button
               onClick={() => setNueva(true)}
-              className="vidrio flex h-11 items-center gap-1.5 rounded-full border border-white/40 bg-white/15 px-4 font-semibold hover:bg-white/25"
+              className="vidrio flex h-11 items-center gap-1.5 rounded-full border border-white/40 bg-white/15 px-3.5 font-semibold hover:bg-white/25 max-[374px]:px-2.5"
             >
-              <Plus className="size-5" aria-hidden /> Clase
+              <Plus className="size-5" aria-hidden />
+              <span className="max-[374px]:sr-only">Clase</span>
             </button>
             <Link
               to="/perfil"

@@ -31,7 +31,7 @@ Reglas:
 - Misma cancha con las luces prendidas: fondo `noche #0B1A4A`, vidrio más tenue, líneas más bajas, dos luces suaves arriba y la pelota de fondo con brillo.
 - Se activa con `data-tema="noche"` en `<html>` (`src/lib/tema.ts`). Las variables se redefinen en `:root[data-tema='noche']` y `[data-tema='noche'] .claro`: no hace falta tocar componentes si usan los tokens.
 - Dentro de las hojas, de noche, la acción vuelve a ser amarillo pelota con `text-noche`.
-- El cambio se hace con `SwitchPelota` (Perfil → Apariencia): la pelota cruza la red de un globo y la noche se expande en círculo desde donde cae (View Transitions; si no hay, fundido corto). Preferencia: `azul` (por defecto), `noche` o `auto`, guardada en el dispositivo. `index.html` la aplica antes de pintar.
+- El cambio se hace con `SwitchPelota`, en el encabezado de Hoy: la pelota cruza la red de un globo y, recién cuando cae, la noche se expande en círculo desde ahí (View Transitions; si no hay, fundido corto). Preferencia: `azul` (por defecto), `noche` o `auto`, guardada en el dispositivo ("Seguir el modo del celular" está en Perfil). `index.html` la aplica antes de pintar.
 
 ## Tipografía
 
