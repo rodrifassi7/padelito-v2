@@ -6,6 +6,9 @@ import { ChevronLeft, MessageCircle, Pencil, Repeat } from 'lucide-react'
 import { useAlumno, useAsistenciaDeAlumno, useClasesDeAlumno, type RegistroAsistencia } from '../api/alumnos'
 import { Avatar, Boton, Cargando, ErrorCarga, Seccion } from '../components/ui'
 import { AlumnoHoja } from '../features/alumnos/AlumnoHoja'
+import { usePuntosDeAlumno } from '../api/partidos'
+import { estadisticas } from '../features/partido/estadisticas'
+import { ResumenEstadisticas } from '../features/partido/ResumenEstadisticas'
 import { ASISTENCIA, linkWhatsapp, MANOS, MODALIDADES, pesos, POSICIONES, textoNivel } from '../lib/etiquetas'
 import { deIso, fechaCorta, hora, hoyIso, iso, NOMBRE_DIA } from '../lib/fechas'
 import type { EstadoAsistencia } from '../lib/tipos'
@@ -89,6 +92,23 @@ function ClasesFijas({ alumnoId }: { alumnoId: string }) {
   )
 }
 
+function EnPartidos({ alumnoId }: { alumnoId: string }) {
+  const { data, isPending } = usePuntosDeAlumno(alumnoId)
+  if (isPending) return <Cargando />
+  if (!data?.length) return <p className="text-tinta-suave">Todavía no tiene partidos marcados.</p>
+  const partidos = new Set(data.map((p) => p.partido_id)).size
+  return (
+    <ResumenEstadisticas
+      e={estadisticas(data)}
+      encabezado={
+        <p className="mb-3 text-tinta-suave">
+          {partidos === 1 ? 'En 1 partido' : `En sus últimos ${partidos} partidos`}
+        </p>
+      }
+    />
+  )
+}
+
 export function AlumnoPage() {
   const { id = '' } = useParams()
   const { data: a, isPending, isError, refetch } = useAlumno(id)
@@ -153,6 +173,10 @@ export function AlumnoPage() {
 
       <Seccion titulo="Asistencia">
         <Asistencia alumnoId={a.id} />
+      </Seccion>
+
+      <Seccion titulo="En partidos">
+        <EnPartidos alumnoId={a.id} />
       </Seccion>
 
       <Seccion titulo="Ficha">

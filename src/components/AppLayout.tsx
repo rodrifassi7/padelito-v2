@@ -1,10 +1,11 @@
 import { NavLink, Outlet } from 'react-router'
 import clsx from 'clsx'
-import { CalendarDays, CircleUserRound, Sun, Users } from 'lucide-react'
+import { CalendarDays, CircleUserRound, Sun, Trophy, Users } from 'lucide-react'
 
 const PESTANAS = [
   { a: '/', texto: 'Hoy', Icono: Sun },
   { a: '/agenda', texto: 'Agenda', Icono: CalendarDays },
+  { a: '/partidos', texto: 'Partidos', Icono: Trophy },
   { a: '/alumnos', texto: 'Alumnos', Icono: Users },
   { a: '/perfil', texto: 'Perfil', Icono: CircleUserRound },
 ]
@@ -16,7 +17,7 @@ export function AppLayout() {
         <Outlet />
       </main>
       <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-linea bg-white/95 backdrop-blur">
-        <ul className="mx-auto grid max-w-lg grid-cols-4">
+        <ul className="mx-auto grid max-w-lg grid-cols-5">
           {PESTANAS.map(({ a, texto, Icono }) => (
             <li key={a}>
               <NavLink
@@ -24,7 +25,7 @@ export function AppLayout() {
                 end={a === '/'}
                 className={({ isActive }) =>
                   clsx(
-                    'flex h-16 flex-col items-center justify-center gap-0.5 text-[13px] font-medium',
+                    'flex h-16 flex-col items-center justify-center gap-0.5 text-[12.5px] font-medium',
                     isActive ? 'text-cancha' : 'text-tinta-suave',
                   )
                 }

@@ -106,14 +106,16 @@ interface HojaProps {
   titulo: string
   children: ReactNode
   pie?: ReactNode
+  /** Sin botón de cerrar: solo se sale con las acciones de adentro. */
+  fija?: boolean
 }
 
-export function Hoja({ abierta, onCerrar, titulo, children, pie }: HojaProps) {
+export function Hoja({ abierta, onCerrar, titulo, children, pie, fija }: HojaProps) {
   const id = useId()
 
   useEffect(() => {
     if (!abierta) return
-    const alTeclear = (e: KeyboardEvent) => e.key === 'Escape' && onCerrar()
+    const alTeclear = (e: KeyboardEvent) => e.key === 'Escape' && !fija && onCerrar()
     const overflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', alTeclear)
@@ -121,30 +123,32 @@ export function Hoja({ abierta, onCerrar, titulo, children, pie }: HojaProps) {
       document.body.style.overflow = overflow
       window.removeEventListener('keydown', alTeclear)
     }
-  }, [abierta, onCerrar])
+  }, [abierta, onCerrar, fija])
 
   if (!abierta) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
-      <div className="absolute inset-0 bg-tinta/40" onClick={onCerrar} aria-hidden />
+      <div className="absolute inset-0 bg-tinta/40" onClick={fija ? undefined : onCerrar} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={id}
-        className="animate-subir relative flex max-h-[92dvh] w-full max-w-lg flex-col rounded-t-3xl bg-fondo sm:rounded-3xl"
+        className="animate-subir relative flex max-h-[92dvh] w-full max-w-lg flex-col rounded-t-3xl bg-fondo text-tinta sm:rounded-3xl"
       >
         <header className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
           <h2 id={id} className="font-display text-2xl font-semibold">
             {titulo}
           </h2>
-          <button
-            onClick={onCerrar}
-            className="grid size-10 place-items-center rounded-full text-tinta-suave hover:bg-linea/60"
-            aria-label="Cerrar"
-          >
-            <X className="size-5" />
-          </button>
+          {!fija && (
+            <button
+              onClick={onCerrar}
+              className="grid size-10 place-items-center rounded-full text-tinta-suave hover:bg-linea/60"
+              aria-label="Cerrar"
+            >
+              <X className="size-5" />
+            </button>
+          )}
         </header>
         <div className="flex-1 overflow-y-auto px-5 pb-5">{children}</div>
         {pie && <footer className="safe-bottom border-t border-linea bg-white px-5 pt-3 pb-3 sm:rounded-b-3xl">{pie}</footer>}
