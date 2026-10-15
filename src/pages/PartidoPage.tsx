@@ -7,6 +7,7 @@ import { Boton, Cargando, ErrorCarga, Seccion } from '../components/ui'
 import { LADO } from '../features/partido/Cancha'
 import { estadisticasPorJugador } from '../features/partido/estadisticas'
 import { ResumenEstadisticas } from '../features/partido/ResumenEstadisticas'
+import { CompartirTarjeta } from '../features/partido/CompartirTarjeta'
 import { deIso, fechaLarga } from '../lib/fechas'
 import { mensajeError } from '../lib/supabase'
 
@@ -59,6 +60,8 @@ export function PartidoPage() {
         </div>
         {!p.ganador && <p className="mt-3 text-sm text-white/75">Quedó sin terminar.</p>}
       </header>
+
+      <CompartirTarjeta partido={p} puntos={puntos} />
 
       {([1, 2] as const).map((n) => (
         <Seccion key={n} titulo={`Pareja ${n === 1 ? 'de arriba' : 'de abajo'}`}>
