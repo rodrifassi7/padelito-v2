@@ -1,0 +1,49 @@
+import { useEffect, useState, type FormEvent } from 'react'
+import { toast } from 'sonner'
+import { useGuardarProfe, useProfe } from '../api/profe'
+import { Boton, Campo, Cargando, Titulo } from '../components/ui'
+import { mensajeError, supabase } from '../lib/supabase'
+
+export function PerfilPage() {
+  const { data: profe, isPending } = useProfe()
+  const guardar = useGuardarProfe()
+  const [form, setForm] = useState({ nombre: '', telefono: '', club: '' })
+
+  useEffect(() => {
+    if (profe) setForm({ nombre: profe.nombre, telefono: profe.telefono ?? '', club: profe.club ?? '' })
+  }, [profe])
+
+  function enviar(e: FormEvent) {
+    e.preventDefault()
+    guardar.mutate(
+      { nombre: form.nombre.trim(), telefono: form.telefono.trim() || null, club: form.club.trim() || null },
+      { onSuccess: () => toast.success('Perfil guardado'), onError: (err) => toast.error(mensajeError(err)) },
+    )
+  }
+
+  if (isPending) return <Cargando pantalla />
+
+  return (
+    <div className="px-5">
+      <Titulo>Perfil</Titulo>
+      <p className="-mt-2 mb-6 text-tinta-suave">{profe?.email}</p>
+      <form onSubmit={enviar} className="flex flex-col gap-4">
+        <Campo etiqueta="Nombre">
+          {(id, c) => <input id={id} className={c} required value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} />}
+        </Campo>
+        <Campo etiqueta="Club donde das clases">
+          {(id, c) => <input id={id} className={c} value={form.club} onChange={(e) => setForm({ ...form, club: e.target.value })} />}
+        </Campo>
+        <Campo etiqueta="Teléfono">
+          {(id, c) => <input id={id} className={c} type="tel" inputMode="tel" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />}
+        </Campo>
+        <Boton type="submit" cargando={guardar.isPending} className="mt-2">
+          Guardar perfil
+        </Boton>
+      </form>
+      <Boton variante="secundario" ancho className="mt-10" onClick={() => supabase.auth.signOut()}>
+        Cerrar sesión
+      </Boton>
+    </div>
+  )
+}

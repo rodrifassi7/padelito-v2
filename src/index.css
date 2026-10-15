@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cancha: #1e5aa0;
+  --color-cancha-oscura: #164679;
+  --color-cancha-clara: #e4edf7;
+  --color-tinta: #13202e;
+  --color-tinta-suave: #5b6878;
+  --color-fondo: #f2f5f8;
+  --color-linea: #dce3ea;
+  --color-pelota: #dcf25a;
+  --color-pelota-oscura: #b9d12e;
+  --color-falta: #c2453d;
+  --color-falta-clara: #f8e6e4;
+  --color-aviso: #b97b16;
+  --color-aviso-clara: #f8eed9;
+
+  --font-sans: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-fondo text-tinta font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cancha);
+    outline-offset: 2px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* evita el zoom automático en iOS */
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@utility animate-subir {
+  animation: subir 180ms ease-out;
+}
