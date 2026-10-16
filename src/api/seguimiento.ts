@@ -2,11 +2,44 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { datos, supabase } from '../lib/supabase'
 import { hoyIso } from '../lib/fechas'
 import type { Area, EstadoFoco, Evaluacion, Foco, Nota, TipoNota } from '../lib/tipos'
+import { armarPreparacion } from '../features/seguimiento/preparacion'
 
 const k = {
   notas: (a: string) => ['alumno', a, 'notas'] as const,
   focos: (a: string) => ['alumno', a, 'focos'] as const,
   evaluaciones: (a: string) => ['alumno', a, 'evaluaciones'] as const,
+}
+
+/** Notas y focos cambian lo que se muestra antes de cada clase. */
+const PREPARACION = ['preparacion'] as const
+
+// ─── Antes de la clase ─────────────────────────────────────────────────────
+
+/**
+ * Para cada alumno: lo que quedó de su última clase con notas (anterior a
+ * `fecha`) y sus focos activos. Una sola consulta por pantalla, no por alumno.
+ */
+export function usePreparacion(alumnoIds: string[], fecha: string, activo = true) {
+  const ids = [...new Set(alumnoIds)].sort()
+  return useQuery({
+    queryKey: [...PREPARACION, fecha, ids.join(',')],
+    enabled: activo && ids.length > 0,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const [notas, focos] = await Promise.all([
+        supabase
+          .from('notas')
+          .select('*')
+          .in('alumno_id', ids)
+          .lt('fecha', fecha)
+          .order('fecha', { ascending: false })
+          .order('created_at', { ascending: true })
+          .limit(Math.min(400, ids.length * 25)),
+        supabase.from('focos').select('*').in('alumno_id', ids).neq('estado', 'logrado').order('created_at', { ascending: false }),
+      ])
+      return armarPreparacion(datos(notas) as Nota[], datos(focos) as Foco[])
+    },
+  })
 }
 
 // ─── Notas ──────────────────────────────────────────────────────────────────
@@ -60,6 +93,7 @@ export function useCrearNota() {
     onSuccess: (_d, n) => {
       qc.invalidateQueries({ queryKey: k.notas(n.alumno_id) })
       qc.invalidateQueries({ queryKey: k.focos(n.alumno_id) })
+      qc.invalidateQueries({ queryKey: PREPARACION })
       if (n.sesion_id) qc.invalidateQueries({ queryKey: ['sesion', n.sesion_id, 'notas'] })
     },
   })
@@ -71,7 +105,10 @@ export function useBorrarNota(alumnoId: string) {
     mutationFn: async (id: string) => {
       datos(await supabase.from('notas').delete().eq('id', id))
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: k.notas(alumnoId) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: k.notas(alumnoId) })
+      qc.invalidateQueries({ queryKey: PREPARACION })
+    },
   })
 }
 
@@ -101,7 +138,10 @@ export function useGuardarFoco(alumnoId: string) {
       if (id) datos(await supabase.from('focos').update(f).eq('id', id))
       else datos(await supabase.from('focos').insert({ ...f, alumno_id: alumnoId }))
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: k.focos(alumnoId) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: k.focos(alumnoId) })
+      qc.invalidateQueries({ queryKey: PREPARACION })
+    },
   })
 }
 
@@ -125,7 +165,10 @@ export function useEstadoFoco(alumnoId: string) {
       return { antes }
     },
     onError: (_e, _v, ctx) => qc.setQueryData(k.focos(alumnoId), ctx?.antes),
-    onSettled: () => qc.invalidateQueries({ queryKey: k.focos(alumnoId) }),
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: k.focos(alumnoId) })
+      qc.invalidateQueries({ queryKey: PREPARACION })
+    },
   })
 }
 
@@ -135,7 +178,10 @@ export function useBorrarFoco(alumnoId: string) {
     mutationFn: async (id: string) => {
       datos(await supabase.from('focos').delete().eq('id', id))
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: k.focos(alumnoId) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: k.focos(alumnoId) })
+      qc.invalidateQueries({ queryKey: PREPARACION })
+    },
   })
 }
 

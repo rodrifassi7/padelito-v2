@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { MapPin, NotebookPen, Repeat, UserPlus, X } from 'lucide-react'
+import { Check, MapPin, NotebookPen, Repeat, Target, UserPlus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   useBorrarSesion,
@@ -9,12 +9,62 @@ import {
   useSumarAlumno,
   useTerminarClase,
 } from '../../api/agenda'
+import { usePreparacion } from '../../api/seguimiento'
 import { Avatar, Boton, Hoja } from '../../components/ui'
-import { deIso, fechaLarga, hora, horaFin, NOMBRE_DIA, diaSemana } from '../../lib/fechas'
+import { deIso, fechaCorta, fechaLarga, hora, horaFin, NOMBRE_DIA, diaSemana } from '../../lib/fechas'
 import { mensajeError } from '../../lib/supabase'
 import type { Sesion } from '../../lib/tipos'
 import { ElegirAlumnos } from '../alumnos/ElegirAlumnos'
 import { NotaHoja } from '../seguimiento/NotaHoja'
+import { ESTADOS_FOCO, textoTipoNota } from '../seguimiento/catalogo'
+import type { Preparacion } from '../seguimiento/preparacion'
+
+/** Lo que conviene tener presente de un alumno antes de esta clase. */
+function Pendientes({ prep }: { prep: Preparacion | undefined }) {
+  if (!prep || (prep.ultimaClase.length === 0 && prep.focos.length === 0)) return null
+  return (
+    <div className="mt-1.5 ml-11 flex flex-col gap-2 pb-1 text-[14px] leading-snug">
+      {prep.ultimaClase.length > 0 && prep.ultimaFecha && (
+        <div>
+          <p className="text-[12px] font-semibold text-tinta-suave">Última clase, {fechaCorta(deIso(prep.ultimaFecha))}</p>
+          <ul className="mt-0.5 flex flex-col gap-0.5">
+            {prep.ultimaClase.slice(0, 3).map((n) => (
+              <li key={n.id} className="flex gap-1.5">
+                {n.tipo === 'avance' ? (
+                  <Check className="mt-0.5 size-3.5 shrink-0 text-acento" aria-hidden />
+                ) : (
+                  <span className="mt-[7px] size-1.5 shrink-0 rounded-full bg-acento" aria-hidden />
+                )}
+                <span>
+                  <span className="sr-only">{textoTipoNota(n.tipo!)}: </span>
+                  {n.texto}
+                  {n.tipo === 'error' && <span className="text-tinta-suave"> · se repite</span>}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {prep.focos.length > 0 && (
+        <div>
+          <p className="text-[12px] font-semibold text-tinta-suave">Focos</p>
+          <ul className="mt-0.5 flex flex-col gap-0.5">
+            {prep.focos.slice(0, 3).map((f) => (
+              <li key={f.id} className="flex gap-1.5">
+                <Target className="mt-0.5 size-3.5 shrink-0 text-acento" aria-hidden />
+                <span>
+                  {f.texto}
+                  <span className="text-tinta-suave"> · {ESTADOS_FOCO.find((e) => e.valor === f.estado)?.texto.toLowerCase()}</span>
+                </span>
+              </li>
+            ))}
+            {prep.focos.length > 3 && <li className="text-tinta-suave">y {prep.focos.length - 3} más en su ficha</li>}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
 
 /** Botón que pide un segundo toque antes de hacer algo que no se puede deshacer. */
 function BotonConfirmar({ children, confirmar, onConfirmar, cargando }: {
@@ -57,6 +107,11 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
   const quitar = useQuitarAlumno()
   const terminar = useTerminarClase()
   const borrar = useBorrarSesion()
+  const { data: preparacion } = usePreparacion(
+    sesion?.asistencias.map((a) => a.alumno_id) ?? [],
+    sesion?.fecha ?? '',
+    Boolean(sesion) && sesion?.estado !== 'cancelada',
+  )
 
   useEffect(() => {
     setModo({ tipo: 'ver' })
@@ -174,29 +229,32 @@ export function SesionHoja({ sesion, onCerrar }: Props) {
       <ul className="mb-7 overflow-hidden rounded-xl vidrio border border-linea bg-superficie">
         {sesion.asistencias.length === 0 && <li className="px-4 py-4 text-tinta-suave">Nadie anotado todavía.</li>}
         {sesion.asistencias.map((a) => (
-          <li key={a.alumno_id} className="flex items-center gap-3 border-b border-linea px-3.5 py-2 last:border-b-0">
-            <Avatar nombre={a.alumno.nombre} tam="sm" />
-            <Link to={`/alumnos/${a.alumno_id}`} onClick={onCerrar} className="min-w-0 flex-1 truncate font-medium hover:text-acento">
-              {a.alumno.nombre}
-            </Link>
-            {!cancelada && (
-              <button
-                onClick={() => setModo({ tipo: 'nota', alumnoId: a.alumno_id })}
-                className="grid size-9 place-items-center rounded-full text-acento hover:bg-acento-suave"
-                aria-label={`Nota para ${a.alumno.nombre}`}
-              >
-                <NotebookPen className="size-4" />
-              </button>
-            )}
-            {!cancelada && (
-              <button
-                onClick={() => setModo({ tipo: 'quitar', alumnoId: a.alumno_id, nombre: a.alumno.nombre })}
-                className="grid size-9 place-items-center rounded-full text-tinta-suave hover:bg-linea/60"
-                aria-label={`Sacar a ${a.alumno.nombre}`}
-              >
-                <X className="size-4" />
-              </button>
-            )}
+          <li key={a.alumno_id} className="border-b border-linea px-3.5 py-2 last:border-b-0">
+            <div className="flex items-center gap-3">
+              <Avatar nombre={a.alumno.nombre} tam="sm" />
+              <Link to={`/alumnos/${a.alumno_id}`} onClick={onCerrar} className="min-w-0 flex-1 truncate font-medium hover:text-acento">
+                {a.alumno.nombre}
+              </Link>
+              {!cancelada && (
+                <button
+                  onClick={() => setModo({ tipo: 'nota', alumnoId: a.alumno_id })}
+                  className="grid size-9 place-items-center rounded-full text-acento hover:bg-acento-suave"
+                  aria-label={`Nota para ${a.alumno.nombre}`}
+                >
+                  <NotebookPen className="size-4" />
+                </button>
+              )}
+              {!cancelada && (
+                <button
+                  onClick={() => setModo({ tipo: 'quitar', alumnoId: a.alumno_id, nombre: a.alumno.nombre })}
+                  className="grid size-9 place-items-center rounded-full text-tinta-suave hover:bg-linea/60"
+                  aria-label={`Sacar a ${a.alumno.nombre}`}
+                >
+                  <X className="size-4" />
+                </button>
+              )}
+            </div>
+            {!cancelada && <Pendientes prep={preparacion?.get(a.alumno_id)} />}
           </li>
         ))}
       </ul>

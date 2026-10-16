@@ -121,7 +121,7 @@ export function NotaHoja({ abierta, onCerrar, alumnos, inicial, sesionId, fecha 
 
         <Opciones etiqueta="Qué es" opciones={TIPOS_NOTA} valor={tipo} onChange={(v) => v && setTipo(v)} />
 
-        <Campo etiqueta="Nota">
+        <Campo etiqueta="Nota" ayuda={tipo === 'avance' ? undefined : 'La vas a ver en Hoy antes de su próxima clase.'}>
           {(id, c) => (
             <textarea id={id} className={c} rows={3} required placeholder={AYUDA[tipo]} value={texto} onChange={(e) => setTexto(e.target.value)} />
           )}

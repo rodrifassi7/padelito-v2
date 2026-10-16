@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { Plus } from 'lucide-react'
 import { useAgenda } from '../api/agenda'
 import { useProfe } from '../api/profe'
+import { usePreparacion } from '../api/seguimiento'
 import { MarcaCancha } from '../components/MarcaCancha'
 import { SwitchPelota } from '../components/SwitchPelota'
 import { Boton, Cargando, ErrorCarga, Vacio } from '../components/ui'
@@ -34,6 +35,7 @@ export function HoyPage() {
   const ahora = new Date().getHours() * 60 + new Date().getMinutes()
   const proxima = activas.find((s) => minutos(s.hora) + s.duracion_min > ahora)
   const sesionAbierta = sesiones?.find((s) => s.id === abierta) ?? null
+  const { data: preparacion } = usePreparacion(activas.flatMap((s) => s.asistencias.map((a) => a.alumno_id)), hoy)
   const primerNombre = profe?.nombre.split(' ')[0]
 
   return (
@@ -92,7 +94,7 @@ export function HoyPage() {
           />
         )}
         <div className="flex flex-col gap-3">
-          {sesiones?.map((s) => <SesionCard key={s.id} sesion={s} onAbrir={() => setAbierta(s.id)} />)}
+          {sesiones?.map((s) => <SesionCard key={s.id} sesion={s} onAbrir={() => setAbierta(s.id)} preparacion={preparacion} />)}
         </div>
       </div>
 

@@ -1,11 +1,12 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { ChevronRight, MapPin, NotebookPen, Repeat } from 'lucide-react'
+import { ChevronRight, History, MapPin, NotebookPen, Repeat, Target } from 'lucide-react'
 import { useMarcarAsistencia } from '../../api/agenda'
 import { ASISTENCIA } from '../../lib/etiquetas'
 import { hora, horaFin, hoyIso, minutos } from '../../lib/fechas'
 import type { Asistencia, EstadoAsistencia, Sesion } from '../../lib/tipos'
 import { NotaHoja } from '../seguimiento/NotaHoja'
+import { principal, type Preparacion } from '../seguimiento/preparacion'
 
 const ESTILO_ACTIVO: Record<Exclude<EstadoAsistencia, 'pendiente'>, string> = {
   presente: 'bg-pelota text-noche border-pelota-oscura',
@@ -44,7 +45,29 @@ function ControlAsistencia({ sesion, asistencia }: { sesion: Sesion; asistencia:
   )
 }
 
-export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () => void }) {
+/** Una línea debajo del alumno: lo que quedó de la última clase o su foco principal. */
+function ParaHoy({ prep }: { prep: Preparacion | undefined }) {
+  const p = principal(prep)
+  if (!p) return null
+  const Icono = p.item.origen === 'nota' ? History : Target
+  return (
+    <p className="mt-1 flex items-center gap-1.5 text-[13px] leading-tight text-tinta-suave">
+      <Icono className="size-3.5 shrink-0 text-acento" aria-hidden />
+      <span className="sr-only">{p.item.origen === 'nota' ? 'De la última clase:' : 'Foco:'}</span>
+      <span className="min-w-0 truncate">{p.item.texto}</span>
+      {p.resto > 0 && <span className="shrink-0 font-semibold text-tinta">+{p.resto}</span>}
+    </p>
+  )
+}
+
+interface Props {
+  sesion: Sesion
+  onAbrir: () => void
+  /** Lo que quedó pendiente de cada alumno (solo en Hoy, antes y durante la clase). */
+  preparacion?: Map<string, Preparacion>
+}
+
+export function SesionCard({ sesion, onAbrir, preparacion }: Props) {
   const cancelada = sesion.estado === 'cancelada'
   const [notas, setNotas] = useState(false)
   // Los que vinieron primero; si todavía no se marcó nada, todos.
@@ -54,6 +77,10 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
   const empezo =
     sesion.fecha < hoyIso() || (sesion.fecha === hoyIso() && minutos(sesion.hora) <= ahora.getHours() * 60 + ahora.getMinutes())
   const puedeAnotar = !cancelada && empezo && paraNotas.length > 0
+  const termino =
+    sesion.fecha < hoyIso() ||
+    (sesion.fecha === hoyIso() && minutos(sesion.hora) + sesion.duracion_min <= ahora.getHours() * 60 + ahora.getMinutes())
+  const mostrarPendientes = Boolean(preparacion) && !cancelada && !termino
 
   return (
     <article className={clsx('rounded-2xl vidrio border border-linea bg-superficie', cancelada && 'opacity-60')}>
@@ -99,9 +126,12 @@ export function SesionCard({ sesion, onAbrir }: { sesion: Sesion; onAbrir: () =>
             <li className="px-4 py-3 text-sm text-tinta-suave">Sin alumnos. Abrila para sumar.</li>
           )}
           {sesion.asistencias.map((a) => (
-            <li key={a.alumno_id} className="flex items-center justify-between gap-3 border-b border-linea px-4 py-2.5 last:border-b-0">
-              <span className="min-w-0 truncate font-medium">{a.alumno.nombre}</span>
-              <ControlAsistencia sesion={sesion} asistencia={a} />
+            <li key={a.alumno_id} className="border-b border-linea px-4 py-2.5 last:border-b-0">
+              <div className="flex items-center justify-between gap-3">
+                <span className="min-w-0 truncate font-medium">{a.alumno.nombre}</span>
+                <ControlAsistencia sesion={sesion} asistencia={a} />
+              </div>
+              {mostrarPendientes && <ParaHoy prep={preparacion?.get(a.alumno_id)} />}
             </li>
           ))}
         </ul>
