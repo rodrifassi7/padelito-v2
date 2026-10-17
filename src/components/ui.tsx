@@ -1,4 +1,4 @@
-import { useEffect, useId, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { useEffect, useId, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import { LoaderCircle, X } from 'lucide-react'
@@ -111,8 +111,30 @@ interface HojaProps {
   fija?: boolean
 }
 
+/**
+ * Zona visible de la pantalla (sin el teclado). En iOS el teclado no achica la
+ * página: tapa lo que está abajo. Con esto la hoja se apoya arriba del teclado.
+ */
+function useZonaVisible(activa: boolean) {
+  const [zona, setZona] = useState<{ arriba: number; alto: number } | null>(null)
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!activa || !vv) return
+    const medir = () => setZona({ arriba: vv.offsetTop, alto: vv.height })
+    medir()
+    vv.addEventListener('resize', medir)
+    vv.addEventListener('scroll', medir)
+    return () => {
+      vv.removeEventListener('resize', medir)
+      vv.removeEventListener('scroll', medir)
+    }
+  }, [activa])
+  return zona
+}
+
 export function Hoja({ abierta, onCerrar, titulo, children, pie, fija }: HojaProps) {
   const id = useId()
+  const zona = useZonaVisible(abierta)
 
   useEffect(() => {
     if (!abierta) return
@@ -131,13 +153,16 @@ export function Hoja({ abierta, onCerrar, titulo, children, pie, fija }: HojaPro
   // Se monta en <body>: si quedara adentro de una tarjeta de vidrio (backdrop-filter),
   // el `fixed` quedaría atrapado en la tarjeta y la barra de abajo la taparía.
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+    <div
+      className="fixed inset-x-0 top-0 z-50 flex h-dvh items-end justify-center sm:items-center"
+      style={zona ? { top: zona.arriba, height: zona.alto } : undefined}
+    >
       <div className="absolute inset-0 bg-noche/55" onClick={fija ? undefined : onCerrar} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={id}
-        className="claro animate-subir relative flex max-h-[92dvh] w-full max-w-lg flex-col rounded-t-3xl bg-fondo text-tinta shadow-2xl sm:rounded-3xl"
+        className="claro animate-subir relative flex max-h-[92%] w-full max-w-lg flex-col rounded-t-3xl bg-fondo text-tinta shadow-2xl sm:rounded-3xl"
       >
         <header className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
           <h2 id={id} className="font-display text-xl font-bold tracking-tight">

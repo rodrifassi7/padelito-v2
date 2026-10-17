@@ -58,7 +58,7 @@ export function ElegirAlumnos({ elegidos, onChange, excluir = [], uno }: Props) 
     <div className="flex flex-col gap-2">
       <label className="relative block">
         <span className="sr-only">Buscar o agregar alumno</span>
-        <Search className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
+        <Search className="pointer-events-none absolute top-1/2 left-3.5 z-10 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
         <input
           className="w-full rounded-xl vidrio border border-linea bg-superficie py-3 pr-3.5 pl-11 focus:border-primario focus:ring-2 focus:ring-primario/30 focus:outline-none"
           placeholder="Buscar o escribir un nombre nuevo"

@@ -40,7 +40,7 @@ export function AlumnosPage() {
       {alumnos && alumnos.length > 0 && (
         <label className="relative mb-4 block">
           <span className="sr-only">Buscar alumno</span>
-          <Search className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 z-10 size-5 -translate-y-1/2 text-tinta-suave" aria-hidden />
           <input
             className="w-full rounded-xl vidrio border border-linea bg-superficie py-3 pr-3.5 pl-11 focus:border-primario focus:ring-2 focus:ring-primario/30 focus:outline-none"
             placeholder="Buscar"
